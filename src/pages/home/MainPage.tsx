@@ -2,9 +2,12 @@ import { Box, Button, Typography } from "@mui/material";
 import styles from "./MainPage.module.css";
 import ThemeWrapper from "../../common/theme";
 import { useNavigate } from "react-router-dom";
+import { UserProvider } from "../../context/UserContext";
+import { LobbyProvider } from "../../context/LobbyContext";
 
 export default function MainPage() {
   const navigate = useNavigate();
+
   return (
     <ThemeWrapper>
       <Box className={styles.lobbyContainer}>

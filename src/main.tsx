@@ -6,16 +6,22 @@ import HostPage from "./pages/host/HostPage.tsx";
 import AdminPage from "./pages/admin/AdminPage.tsx";
 import PlayerPage from "./pages/player/PlayerPage.tsx";
 import "./common/global.css";
+import { UserProvider } from "./context/UserContext.tsx";
+import { LobbyProvider } from "./context/LobbyContext.tsx";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <BrowserRouter>
-      <Routes>
-        <Route path="" element={<MainPage />} />
-        <Route path="/host" element={<HostPage />} />
-        <Route path="/admin" element={<AdminPage />} />
-        <Route path="/player" element={<PlayerPage />} />
-      </Routes>
-    </BrowserRouter>
+    <UserProvider>
+      <LobbyProvider>
+        <BrowserRouter>
+          <Routes>
+            <Route path="" element={<MainPage />} />
+            <Route path="/host" element={<HostPage />} />
+            <Route path="/admin" element={<AdminPage />} />
+            <Route path="/player" element={<PlayerPage />} />
+          </Routes>
+        </BrowserRouter>
+      </LobbyProvider>
+    </UserProvider>
   </StrictMode>
 );

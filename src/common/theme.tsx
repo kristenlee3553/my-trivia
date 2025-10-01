@@ -48,11 +48,17 @@ const themeOptions: ThemeOptions = {
               outline: "2px solid white",
               outlineOffset: "5px",
             },
+            "&.Mui-disabled": {
+              backgroundColor: "#1a1f3a", // darker or muted color
+              border: "2px solid #888", // muted border
+              color: "#888", // muted text
+              cursor: "not-allowed",
+            },
           },
         },
       ],
     },
-    MuiTextField: {
+    MuiOutlinedInput: {
       styleOverrides: {
         root: {
           border: "2px solid #FCA311",
@@ -62,6 +68,19 @@ const themeOptions: ThemeOptions = {
           "&:hover": {
             backgroundColor: "#1B2E55",
           },
+          // Error state
+          "&.Mui-error": {
+            borderColor: "#C1292E", // red border
+          },
+        },
+      },
+    },
+    MuiFormHelperText: {
+      styleOverrides: {
+        root: {
+          marginTop: "4px",
+          color: "#C1292E !important",
+          fontSize: "0.9rem",
         },
       },
     },
