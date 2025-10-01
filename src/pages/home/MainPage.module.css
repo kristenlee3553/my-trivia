@@ -1,0 +1,27 @@
+div.lobbyContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  justify-content: space-evenly;
+  align-items: center;
+  width: 100%;
+  min-height: 100vh;
+  background-color: var(--primary-color);
+}
+
+div.buttonContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 5vh;
+}
+
+h1.title {
+  font-size: xx-large;
+  color: var(--light-text);
+}
+
+button.lobbyButton {
+  width: 10vw;
+  height: 7vh;
+  min-width: 240px;
+}
