@@ -1,8 +1,18 @@
 import { z } from "zod";
 
 // Enums
-export const LobbyStatusSchema = z.enum(["notStarted", "started", "completed"]);
+export const LobbyStatusSchema = z.enum([
+  "notStarted",
+  "preview",
+  "answering",
+  "showAnswer",
+  "leaderboard",
+  "finalScore",
+  "completed",
+]);
 export const QuestionTypeSchema = z.enum(["video", "text"]);
+
+export const AnswerTypeSchema = z.enum(["selectOne", "multiCheck"]);
 
 // Player schema
 export const PlayerSchema = z.object({
@@ -16,10 +26,11 @@ export const PlayerSchema = z.object({
 // Question schema
 export const QuestionSchema = z.object({
   id: z.string(),
-  type: QuestionTypeSchema,
+  questionType: QuestionTypeSchema,
+  answerType: AnswerTypeSchema,
   options: z.array(z.string()),
-  correctAnswer: z.string(),
-  answers: z.record(z.string(), z.string()), // uid -> answer
+  correctAnswer: z.array(z.string()), // If multi select
+  answers: z.record(z.string(), z.array(z.string())), // uid -> answer(s)
 });
 
 // Lobby schema
@@ -37,6 +48,7 @@ export const LobbySchema = z.object({
 export const GameOptionsSchema = z.object({
   shuffleQuestions: z.boolean(),
   shuffleAnswers: z.boolean(),
+  pickXQuestion: z.number(),
 });
 
 // Infer TypeScript types automatically
@@ -44,5 +56,6 @@ export type Player = z.infer<typeof PlayerSchema>;
 export type Question = z.infer<typeof QuestionSchema>;
 export type LobbyStatus = z.infer<typeof LobbyStatusSchema>;
 export type QuestionType = z.infer<typeof QuestionTypeSchema>;
+export type AnswerType = z.infer<typeof AnswerTypeSchema>;
 export type Lobby = z.infer<typeof LobbySchema>;
 export type GameOptions = z.infer<typeof GameOptionsSchema>;

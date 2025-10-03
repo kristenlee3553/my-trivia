@@ -23,31 +23,15 @@ const themeOptions: ThemeOptions = {
         {
           props: { variant: "primary" },
           style: {
-            backgroundColor: "#14213d",
             border: "2px solid #FCA311",
             color: "#FCA311",
-            "&:hover": {
-              backgroundColor: "#1B2E55",
-            },
-            "&:focus-visible": {
-              outline: "2px solid white",
-              outlineOffset: "5px",
-            },
           },
         },
         {
           props: { variant: "secondary" },
           style: {
-            backgroundColor: "#14213d",
             border: "2px solid #2ec4b6",
             color: "#2ec4b6",
-            "&:hover": {
-              backgroundColor: "#1B2E55",
-            },
-            "&:focus-visible": {
-              outline: "2px solid white",
-              outlineOffset: "5px",
-            },
             "&.Mui-disabled": {
               backgroundColor: "#1a1f3a", // darker or muted color
               border: "2px solid #888", // muted border
@@ -56,7 +40,26 @@ const themeOptions: ThemeOptions = {
             },
           },
         },
+        {
+          props: { variant: "cancel" },
+          style: {
+            border: "2px solid #C1292E",
+            color: "#C1292E",
+          },
+        },
       ],
+      styleOverrides: {
+        root: {
+          backgroundColor: "#14213d",
+          "&:hover": {
+            backgroundColor: "#1B2E55",
+          },
+          "&:focus-visible": {
+            outline: "2px solid white",
+            outlineOffset: "5px",
+          },
+        },
+      },
     },
     MuiOutlinedInput: {
       styleOverrides: {
@@ -89,6 +92,7 @@ const themeOptions: ThemeOptions = {
         root: {
           color: "#BAC9E9",
           gap: "12px",
+          margin: 0,
         },
       },
     },

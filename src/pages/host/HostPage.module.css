@@ -1,0 +1,68 @@
+div.hostPageContainer {
+  display: flex;
+  flex-direction: column;
+  background-color: var(--primary-color);
+  width: 100vw;
+  height: 100vh;
+  overflow-x: hidden;
+}
+
+div.topBar {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 3vh;
+  padding: 0 1vw;
+}
+
+h1.hostPageTitle {
+  color: var(--secondary-color);
+  font-size: xx-large;
+}
+
+button.hostButtons {
+  width: 8vw;
+}
+
+div.gameTileContainer {
+  padding: 20px;
+}
+
+button.invisible {
+  width: 8vw;
+  cursor: none;
+  border: none;
+  color: transparent !important;
+  pointer-events: none;
+}
+
+@media (max-width: 900px) {
+  div.topBar {
+    padding: 0 20px;
+  }
+  button.invisible {
+    width: 10vw;
+  }
+
+  button.hostButtons {
+    width: 10vw;
+  }
+}
+
+@media (max-width: 600px) {
+  div.topBar {
+    flex-direction: column;
+    justify-content: center;
+    display: flex;
+    align-items: center;
+    padding: 0 10px;
+    gap: 10px;
+  }
+
+  button.invisible {
+    display: none;
+  }
+
+  button.hostButtons {
+    width: 90%;
+  }
+}

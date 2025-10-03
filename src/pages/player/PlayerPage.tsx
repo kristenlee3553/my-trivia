@@ -7,8 +7,10 @@ import { addPlayerToLobby, checkLobbyExists } from "../../firebase/lobby";
 import type { Lobby, Player } from "../../common/types";
 import { useUser } from "../../context/UserContext";
 import { useLobby } from "../../context/LobbyContext";
+import { useNavigate } from "react-router-dom";
 
 export default function PlayerPage() {
+  const navigate = useNavigate();
   const [lobbyCode, setLobbyCode] = useState<string>("");
   const [nickname, setNickname] = useState<string>("");
   const [lobbyError, setLobbyError] = useState<boolean>(false);
@@ -61,7 +63,7 @@ export default function PlayerPage() {
     <ThemeWrapper>
       <Box className={styles.playerContainer}>
         <Typography variant="h1" className={styles.title}>
-          Player Page Title
+          Player Setup
         </Typography>
         <Box className={styles.inputContainer}>
           <BaseTextField
@@ -82,14 +84,23 @@ export default function PlayerPage() {
             onChange={(value: string) => setNickname(value)}
           />
         </Box>
-        <Button
-          variant="secondary"
-          className={styles.enterButton}
-          onClick={joinLobbyHandler}
-          disabled={lobbyCode.length === 0}
-        >
-          Enter
-        </Button>
+        <Box className={styles.buttonContainer}>
+          <Button
+            variant="secondary"
+            className={styles.playerButton}
+            onClick={joinLobbyHandler}
+            disabled={lobbyCode.length === 0}
+          >
+            Enter
+          </Button>
+          <Button
+            variant="cancel"
+            className={styles.playerButton}
+            onClick={() => navigate("/")}
+          >
+            Back
+          </Button>
+        </Box>
       </Box>
     </ThemeWrapper>
   );

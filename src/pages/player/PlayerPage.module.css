@@ -19,10 +19,29 @@ div.inputContainer {
 h1.title {
   font-size: xx-large;
   color: var(--light-text);
+  font-weight: bold;
 }
 
-button.enterButton {
+div.buttonContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  justify-content: center;
+  align-items: center;
+}
+
+button.playerButton {
   width: 10vw;
   height: 7vh;
-  min-width: 240px;
+  min-width: 20vw;
+}
+
+@media (max-width: 800px) {
+  div.inputContainer {
+    width: 65vw;
+  }
+
+  button.playerButton {
+    width: 65vw;
+  }
 }
