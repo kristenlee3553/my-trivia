@@ -1,19 +1,18 @@
-import { Box, Typography, Button } from "@mui/material";
-import styles from "./GameTile.module.css";
+import { Typography, ToggleButton } from "@mui/material";
+import styles from "./HostPage.module.css";
+import type { GameType } from "./HostPage";
 
 type GameTileProps = {
   name: string;
+  value: GameType;
 };
 
-export default function GameTile({ name }: GameTileProps) {
+export default function GameTile({ name, value }: GameTileProps) {
   return (
-    <Box className={styles.gameTileContainer}>
-      <Typography variant="h2" className={styles.gameTitle}>
+    <ToggleButton value={value} className={styles.toggleButtonContainer}>
+      <Typography variant="h3" className={styles.gameTitle}>
         {name}
       </Typography>
-      <Button variant="primary">View Questions</Button>
-      <Button variant="secondary">Create Lobby</Button>
-      <Button variant="secondary">Customize Game Options</Button>
-    </Box>
+    </ToggleButton>
   );
 }

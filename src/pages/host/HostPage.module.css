@@ -5,6 +5,7 @@ div.hostPageContainer {
   width: 100vw;
   height: 100vh;
   overflow-x: hidden;
+  gap: 10px;
 }
 
 div.topBar {
@@ -17,14 +18,11 @@ div.topBar {
 h1.hostPageTitle {
   color: var(--secondary-color);
   font-size: xx-large;
+  font-weight: bold;
 }
 
 button.hostButtons {
   width: 8vw;
-}
-
-div.gameTileContainer {
-  padding: 20px;
 }
 
 button.invisible {
@@ -33,6 +31,61 @@ button.invisible {
   border: none;
   color: transparent !important;
   pointer-events: none;
+}
+
+div.middleBar {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+
+div.gameControls {
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  width: fit-content;
+  margin-right: 20px;
+  margin-top: 20px;
+  gap: 30px;
+}
+
+h2.gameControlsTitle {
+  font-size: xx-large;
+  font-weight: bold;
+  color: var(--accent-color);
+}
+
+button.gameControlButton {
+  width: 10vw;
+  height: 50px;
+}
+
+h2.selectGameTitle {
+  font-size: xx-large;
+  font-weight: bold;
+  color: var(--accent-color);
+  margin-left: 20px;
+  align-self: flex-end;
+}
+
+div.gameTileContainer {
+  padding: 20px;
+  width: 100%;
+}
+
+button.toggleButtonContainer {
+  display: flex;
+  width: 100%;
+  height: 400px;
+  align-items: center;
+  justify-content: center;
+}
+
+h3.gameTitle {
+  font-size: xx-large;
+  font-weight: bold;
+  color: inherit;
+  text-overflow: ellipsis;
 }
 
 @media (max-width: 900px) {
@@ -45,6 +98,24 @@ button.invisible {
 
   button.hostButtons {
     width: 10vw;
+  }
+
+  h2.selectGameTitle {
+    align-self: unset;
+    margin: unset;
+    margin-left: 10px;
+    font-size: larger;
+  }
+
+  div.gameControls {
+    justify-content: center;
+    margin: 0;
+    margin-right: 10px;
+    gap: 10px;
+  }
+
+  h2.gameControlsTitle {
+    font-size: larger;
   }
 }
 
@@ -64,5 +135,34 @@ button.invisible {
 
   button.hostButtons {
     width: 90%;
+  }
+
+  div.gameTileContainer {
+    height: 500px;
+  }
+
+  div.middleBar {
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    margin: 10px 0;
+  }
+
+  h2.selectGameTitle {
+    align-self: unset;
+    margin: unset;
+  }
+
+  div.gameControls {
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin: 0;
+    width: unset;
+  }
+
+  button.gameControlButton {
+    width: 80vw;
   }
 }

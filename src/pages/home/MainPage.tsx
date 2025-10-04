@@ -10,19 +10,19 @@ export default function MainPage() {
     <ThemeWrapper>
       <Box className={styles.lobbyContainer}>
         <Typography variant="h1" className={styles.title}>
-          Lobby Title Welcome
+          Welcome!
         </Typography>
         <Box className={styles.buttonContainer}>
           <Button
             className={styles.lobbyButton}
-            variant="secondary"
+            variant="primary"
             onClick={() => navigate("/host")}
           >
             Host
           </Button>
           <Button
             className={styles.lobbyButton}
-            variant="primary"
+            variant="secondary"
             onClick={() => navigate("/player")}
           >
             Join
