@@ -174,41 +174,12 @@ export const GameOptionsSchema = z.object({
 });
 
 // Game schema
-const GameAuthorSchema = z
-  .object({
-    name: z.string(),
-    defaultOptions: OptionsSchema.optional(),
-    defaultTimeLimit: z.number().optional(),
-    questions: z.array(QuestionAuthorSchema).min(1),
-  })
-  .superRefine((game, ctx) => {
-    // Rule 1: If no defaultOptions, every question must provide options
-    if (!game.defaultOptions) {
-      game.questions.forEach((q, i) => {
-        if (!q.options) {
-          ctx.addIssue({
-            path: ["questions", i, "options"],
-            code: "custom",
-            message: "Question must have options if game has no defaultOptions",
-          });
-        }
-      });
-    }
-
-    // Rule 2: If no defaultTimeLimit, every question must provide timeLimit
-    if (!game.defaultTimeLimit) {
-      game.questions.forEach((q, i) => {
-        if (!q.timeLimit) {
-          ctx.addIssue({
-            path: ["questions", i, "timeLimit"],
-            code: "custom",
-            message:
-              "Question must have a timeLimit if game has no defaultTimeLimit",
-          });
-        }
-      });
-    }
-  });
+const GameAuthorSchema = z.object({
+  name: z.string(),
+  defaultOptions: OptionsSchema.optional(),
+  defaultTimeLimit: z.number().optional(),
+  questions: z.array(QuestionAuthorSchema).min(1),
+});
 
 // Game schema
 const GameRuntimeSchema = z

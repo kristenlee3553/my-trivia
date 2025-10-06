@@ -47,12 +47,6 @@ const themeOptions: ThemeOptions = {
           style: ({ theme }) => ({
             border: `2px solid ${theme.palette.secondary.main}`,
             color: theme.palette.secondary.main,
-            "&.Mui-disabled": {
-              backgroundColor: theme.palette.action.disabled,
-              border: `2px solid ${theme.palette.text.disabled}`,
-              color: theme.palette.text.disabled,
-              cursor: "not-allowed",
-            },
           }),
         },
         {
@@ -72,6 +66,12 @@ const themeOptions: ThemeOptions = {
           "&:focus-visible": {
             outline: `2px solid ${theme.palette.action.focus}`,
             outlineOffset: "5px",
+          },
+          "&.Mui-disabled": {
+            backgroundColor: theme.palette.action.disabled,
+            border: `2px solid ${theme.palette.text.disabled}`,
+            color: theme.palette.text.disabled,
+            cursor: "not-allowed",
           },
         }),
       },

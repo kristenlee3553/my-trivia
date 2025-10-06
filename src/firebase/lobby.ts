@@ -1,7 +1,15 @@
 import { ref, get, child, push, set } from "firebase/database";
 import { db } from "./firebase";
 import { DATABASE } from "./constants";
-import { PlayerSchema, type Player } from "../common/types";
+import {
+  PlayerSchema,
+  type GameAuthor,
+  type GameRuntime,
+  type Lobby,
+  type Player,
+  type QuestionRuntime,
+} from "../common/types";
+import { v4 as uuidv4 } from "uuid";
 
 export async function checkLobbyExists(lobbyCode: string): Promise<boolean> {
   const dbRef = ref(db);
@@ -49,5 +57,75 @@ export async function addPlayerToLobby(
   } catch (error) {
     console.error("Error adding player:", error);
     return null;
+  }
+}
+
+function generateLobbyCode(length = 4) {
+  const alphabet = "ABCDEFGHJKMNPQRSTUVWXYZ23456789"; // avoid ambiguous chars
+  let code = "";
+  for (let i = 0; i < length; i++)
+    code += alphabet[Math.floor(Math.random() * alphabet.length)];
+  return code;
+}
+
+export async function generateUniqueLobbyCode(tries = 6) {
+  for (let i = 0; i < tries; i++) {
+    const code = generateLobbyCode();
+    const snap = await get(ref(db, `${DATABASE.LOBBY}/${code}`));
+    if (!snap.exists()) return code;
+  }
+  // fallback to uuid if unlucky
+  return uuidv4().slice(0, 8).toUpperCase();
+}
+
+// Merge GameAuthor -> GameRuntime: assign question ids, fill effective options/timeLimit
+export function createRuntimeGame(authorGame: GameAuthor): GameRuntime {
+  const runtimeQuestions: QuestionRuntime[] = authorGame.questions.map(
+    (qAuthor) => {
+      // id
+      const id = uuidv4();
+
+      // effective options: question overrides game default, else inherit
+      const effectiveOptions =
+        qAuthor.options ?? authorGame.defaultOptions ?? undefined;
+
+      // effective timeLimit: per-question override else game default else undefined
+      const timeLimit =
+        qAuthor.timeLimit ?? authorGame.defaultTimeLimit ?? undefined;
+
+      // Build runtime question (preserve display fields)
+      const runtimeQ: QuestionRuntime = {
+        ...qAuthor,
+        id,
+        options: effectiveOptions,
+        timeLimit,
+        answers: {
+          answerType: qAuthor.correctAnswer.answerType,
+          answers: {},
+        },
+      };
+
+      return runtimeQ;
+    }
+  );
+
+  const runtimeGame: any = {
+    ...authorGame,
+    questions: runtimeQuestions,
+  };
+
+  return runtimeGame as GameRuntime;
+}
+
+export async function createLobby(
+  lobby: Lobby,
+  lobbyCode: string
+): Promise<boolean> {
+  try {
+    await set(ref(db, `${DATABASE.LOBBY}/${lobbyCode}`), lobby);
+    return true;
+  } catch (error) {
+    console.error(error);
+    return false;
   }
 }

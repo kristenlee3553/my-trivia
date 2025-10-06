@@ -8,6 +8,7 @@ import PlayerPage from "./pages/player/PlayerPage.tsx";
 import "./common/global.css";
 import { UserProvider } from "./context/UserContext.tsx";
 import { LobbyProvider } from "./context/LobbyContext.tsx";
+import LobbyPage from "./pages/lobby/LobbyPage.tsx";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
@@ -19,6 +20,7 @@ createRoot(document.getElementById("root")!).render(
             <Route path="/host" element={<HostPage />} />
             <Route path="/admin" element={<AdminPage />} />
             <Route path="/player" element={<PlayerPage />} />
+            <Route path="/lobby" element={<LobbyPage />} />
           </Routes>
         </BrowserRouter>
       </LobbyProvider>
