@@ -44,7 +44,7 @@ const DisplayVideo = z.object({
 
 const DisplayImage = z.object({
   type: z.literal(DisplayType.enum.image),
-  imageUrl: z.url(),
+  imageUrl: z.string().min(1),
   promptText: z.string().optional(),
 });
 
@@ -78,38 +78,22 @@ const OptionsSchema = z.discriminatedUnion("answerType", [
   }),
 ]);
 
-const SingleSelectCorrectAnswer = z.object({
-  answerType: z.literal(AnswerType.enum.single),
-  correctAnswer: z.string(),
-});
-
-const MultiSelectCorrectAnswer = z.object({
-  answerType: z.literal(AnswerType.enum.multi),
-  correctAnswer: z.array(z.string()),
-});
-
-const MatchingCorrectAnswer = z.object({
-  answerType: z.literal(AnswerType.enum.matching),
-  correctAnswer: z.record(z.string(), z.string()), // { "A": "Meow", "B": "Woof" }
-});
-
-const RankingCorrectAnswer = z.object({
-  answerType: z.literal(AnswerType.enum.ranking),
-  correctAnswer: z.array(z.string()),
-});
-
-export const CorrectAnswerSchema = z.discriminatedUnion("answerType", [
-  SingleSelectCorrectAnswer,
-  MultiSelectCorrectAnswer,
-  MatchingCorrectAnswer,
-  RankingCorrectAnswer,
-]);
+/* ---------- correctAnswer shapes (no answerType tag) ---------- */
+const CorrectByType = {
+  single: z.string(),
+  multi: z.array(z.string()),
+  matching: z.record(z.string(), z.string()),
+  ranking: z.array(z.string()),
+} as const satisfies Record<
+  "single" | "multi" | "matching" | "ranking",
+  z.ZodTypeAny
+>;
 
 const QuestionAuthorSchema = z
   .object({
     timeLimit: z.number().optional(),
     options: OptionsSchema.optional(),
-    correctAnswer: CorrectAnswerSchema,
+    correctAnswer: z.any(),
     doublePoints: z.boolean().optional(),
   })
   .and(DisplaySchema);
@@ -170,11 +154,10 @@ export const QuestionRuntimeSchema = QuestionAuthorSchema.and(
 export const GameOptionsSchema = z.object({
   shuffleQuestions: z.boolean(),
   shuffleAnswers: z.boolean(),
-  pickXQuestion: z.number().optional(),
 });
 
 // Game schema
-const GameAuthorSchema = z.object({
+export const GameAuthorSchema = z.object({
   name: z.string(),
   defaultOptions: OptionsSchema.optional(),
   defaultTimeLimit: z.number().optional(),
@@ -190,32 +173,49 @@ const GameRuntimeSchema = z
     questions: z.array(QuestionRuntimeSchema).min(1),
   })
   .superRefine((game, ctx) => {
-    // Rule 1: If no defaultOptions, every question must provide options
-    if (!game.defaultOptions) {
-      game.questions.forEach((q, i) => {
-        if (!q.options) {
-          ctx.addIssue({
-            path: ["questions", i, "options"],
-            code: "custom",
-            message: "Question must have options if game has no defaultOptions",
-          });
-        }
-      });
-    }
+    game.questions.forEach((q, i) => {
+      const effectiveOptions = q.options ?? game.defaultOptions;
+      const effectiveTimeLimit = q.timeLimit ?? game.defaultTimeLimit;
+      if (!effectiveOptions) {
+        ctx.addIssue({
+          path: ["questions", i, "options"],
+          code: "custom",
+          message:
+            "Question must have options (or game must provide defaultOptions).",
+        });
+        return; // skip further checks for this question
+      }
 
-    // Rule 2: If no defaultTimeLimit, every question must provide timeLimit
-    if (!game.defaultTimeLimit) {
-      game.questions.forEach((q, i) => {
-        if (!q.timeLimit) {
-          ctx.addIssue({
-            path: ["questions", i, "timeLimit"],
-            code: "custom",
-            message:
-              "Question must have a timeLimit if game has no defaultTimeLimit",
-          });
-        }
-      });
-    }
+      if (!effectiveTimeLimit) {
+        ctx.addIssue({
+          path: ["questions", i, "timeLimit"],
+          code: "custom",
+          message:
+            "Question must have a timeLimit if game has no defaultTimeLimit",
+        });
+      }
+
+      // 2) ensure correctAnswer exists
+      if (q.correctAnswer === undefined || q.correctAnswer === null) {
+        ctx.addIssue({
+          path: ["questions", i, "correctAnswer"],
+          code: "custom",
+          message: "Question must include a correctAnswer.",
+        });
+        return;
+      }
+
+      // 3) validate correctAnswer against schema appropriate for answerType
+      const validator = CorrectByType[effectiveOptions.answerType];
+      const parseResult = validator.safeParse(q.correctAnswer);
+      if (!parseResult.success) {
+        ctx.addIssue({
+          path: ["questions", i, "correctAnswer"],
+          code: "custom",
+          message: `correctAnswer does not match expected shape for answerType "${effectiveOptions.answerType}".`,
+        });
+      }
+    });
   });
 
 // Lobby schema
@@ -240,7 +240,6 @@ export type LobbyStatus = z.infer<typeof LobbyStatusSchema>;
 export type AnswerType = z.infer<typeof AnswerType>;
 export type DisplayType = z.infer<typeof DisplayType>;
 export type Options = z.infer<typeof OptionsSchema>;
-export type CorrectAnswer = z.infer<typeof CorrectAnswerSchema>;
 export type PlayerAnswers = z.infer<typeof AnswerRuntimeSchema>;
 export type Lobby = z.infer<typeof LobbySchema>;
 export type GameAuthor = z.infer<typeof GameAuthorSchema>;
