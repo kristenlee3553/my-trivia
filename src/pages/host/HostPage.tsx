@@ -13,7 +13,11 @@ import GameTile from "./GameTile";
 import BaseCheckbox from "../../common/Checkbox";
 import { useId, useState } from "react";
 import introJson from "../../games/intro.json.ts";
-import type { GameAuthor, Lobby } from "../../common/types";
+import {
+  GameAuthorSchema,
+  type GameAuthor,
+  type Lobby,
+} from "../../common/types";
 import { useUser } from "../../context/UserContext.tsx";
 import {
   createLobby,
@@ -25,9 +29,9 @@ import { useLobby } from "../../context/LobbyContext.tsx";
 export type GameType = "intro" | "groupChat" | "spotify";
 
 const gameFiles: Record<GameType, GameAuthor> = {
-  intro: introJson,
-  groupChat: introJson,
-  spotify: introJson,
+  intro: GameAuthorSchema.parse(introJson),
+  groupChat: GameAuthorSchema.parse(introJson),
+  spotify: GameAuthorSchema.parse(introJson),
 };
 
 export default function HostPage() {
@@ -81,11 +85,10 @@ export default function HostPage() {
         gameInfo: runtimeGame,
         currentQuestion: "",
         questionOrder: maybeOrder,
-        currentIndex: -1,
+        currentIndex: 0,
         gameOptions: {
           shuffleQuestions,
           shuffleAnswers,
-          pickXQuestion: undefined,
         },
       };
 

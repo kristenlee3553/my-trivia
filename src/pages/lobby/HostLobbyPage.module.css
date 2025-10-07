@@ -1,3 +1,42 @@
 div.hostLobbyPage {
   background-color: var(--background);
+  width: 100vw;
+  height: 100vh;
+  overflow-x: hidden;
+  gap: 10px;
+  display: flex;
+  flex-direction: column;
+}
+
+div.topBar {
+  display: flex;
+  justify-content: space-between;
+  padding: 20px;
+}
+
+h1.gameName {
+  color: var(--primary-color);
+  font-size: xx-large;
+  font-weight: bold;
+}
+
+div.roomCodeContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+h2.lobbyCode {
+  font-size: 150px;
+  font-weight: bold;
+  color: var(--secondary-color);
+  letter-spacing: 15px;
+}
+
+div.playerContainer {
+  display: flex;
+  border: 2px solid var(--primary-color);
+  height: 100%;
+  margin: 10px;
+  border-radius: 8px;
 }

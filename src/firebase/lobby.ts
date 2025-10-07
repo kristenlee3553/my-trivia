@@ -1,4 +1,4 @@
-import { ref, get, child, push, set } from "firebase/database";
+import { ref, get, child, push, set, remove } from "firebase/database";
 import { db } from "./firebase";
 import { DATABASE } from "./constants";
 import {
@@ -100,7 +100,7 @@ export function createRuntimeGame(authorGame: GameAuthor): GameRuntime {
         options: effectiveOptions,
         timeLimit,
         answers: {
-          answerType: qAuthor.correctAnswer.answerType,
+          answerType: effectiveOptions?.answerType ?? "single",
           answers: {},
         },
       };
@@ -127,5 +127,26 @@ export async function createLobby(
   } catch (error) {
     console.error(error);
     return false;
+  }
+}
+
+export async function removeLobby(lobbyCode: string): Promise<void> {
+  try {
+    await remove(ref(db, `${DATABASE.LOBBY}/${lobbyCode}`));
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+export async function removePlayerFromLobby(
+  lobbyCode: string,
+  playerId: string
+): Promise<void> {
+  try {
+    await remove(
+      ref(db, `${DATABASE.LOBBY}/${lobbyCode}/${DATABASE.PLAYERS}/${playerId}`)
+    );
+  } catch (error) {
+    console.error(error);
   }
 }
