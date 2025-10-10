@@ -1,4 +1,4 @@
-import { Box, Button, Typography } from "@mui/material";
+import { Box, Button, Stack, Typography } from "@mui/material";
 import ThemeWrapper from "../../common/theme";
 import styles from "./PlayerPage.module.css";
 import BaseTextField from "../../common/Textfield";
@@ -65,7 +65,14 @@ export default function PlayerPage() {
         <Typography variant="h1" className={styles.title}>
           Player Setup
         </Typography>
-        <Box className={styles.inputContainer}>
+        <Stack
+          spacing={{ xs: 1, sm: 2, md: 3 }}
+          minWidth={"33vw"}
+          width={{
+            xs: "65vw",
+            md: "unset",
+          }}
+        >
           <BaseTextField
             labelText="Enter Room Code"
             onChange={(value: string) => {
@@ -83,8 +90,8 @@ export default function PlayerPage() {
             labelText="Enter Nickname"
             onChange={(value: string) => setNickname(value)}
           />
-        </Box>
-        <Box className={styles.buttonContainer}>
+        </Stack>
+        <Stack spacing={3} justifyContent={"center"} alignItems={"center"}>
           <Button
             variant="secondary"
             className={styles.playerButton}
@@ -100,7 +107,7 @@ export default function PlayerPage() {
           >
             Back
           </Button>
-        </Box>
+        </Stack>
       </Box>
     </ThemeWrapper>
   );

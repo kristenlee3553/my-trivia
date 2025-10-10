@@ -9,19 +9,21 @@ div.lobbyContainer {
   background-color: var(--background);
 }
 
-div.buttonContainer {
-  display: flex;
-  flex-direction: column;
-  gap: 5vh;
-}
-
 h1.title {
   font-size: xx-large;
   color: var(--light-text);
 }
 
 button.lobbyButton {
-  width: 10vw;
+  width: 15vw;
   height: 7vh;
   min-width: 240px;
+  font-size: 15px;
+}
+
+@media (max-width: 900px) {
+  button.lobbyButton {
+    width: 50vw;
+    font-size: 20px;
+  }
 }

@@ -29,6 +29,7 @@ const themeOptions: ThemeOptions = {
       disabled: "#1a1f3a",
     },
   },
+  spacing: (factor: number) => `${10 * factor}px`,
   components: {
     MuiButton: {
       defaultProps: {

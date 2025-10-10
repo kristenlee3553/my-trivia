@@ -9,25 +9,10 @@ div.playerContainer {
   background-color: var(--background);
 }
 
-div.inputContainer {
-  display: flex;
-  flex-direction: column;
-  gap: 5vh;
-  min-width: 33vw;
-}
-
 h1.title {
   font-size: xx-large;
   color: var(--light-text);
   font-weight: bold;
-}
-
-div.buttonContainer {
-  display: flex;
-  flex-direction: column;
-  gap: 30px;
-  justify-content: center;
-  align-items: center;
 }
 
 button.playerButton {
@@ -36,11 +21,7 @@ button.playerButton {
   min-width: 20vw;
 }
 
-@media (max-width: 800px) {
-  div.inputContainer {
-    width: 65vw;
-  }
-
+@media (max-width: 900px) {
   button.playerButton {
     width: 65vw;
   }

@@ -1,4 +1,4 @@
-import { Box, Button, Typography } from "@mui/material";
+import { Box, Button, Stack, Typography } from "@mui/material";
 import styles from "./MainPage.module.css";
 import ThemeWrapper from "../../common/theme";
 import { useNavigate } from "react-router-dom";
@@ -12,7 +12,7 @@ export default function MainPage() {
         <Typography variant="h1" className={styles.title}>
           Welcome!
         </Typography>
-        <Box className={styles.buttonContainer}>
+        <Stack spacing={{ xs: 5, md: 3 }}>
           <Button
             className={styles.lobbyButton}
             variant="primary"
@@ -27,7 +27,7 @@ export default function MainPage() {
           >
             Join
           </Button>
-        </Box>
+        </Stack>
       </Box>
     </ThemeWrapper>
   );
