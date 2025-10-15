@@ -1,0 +1,28 @@
+div.previewPageContainer {
+  width: 100vw;
+  min-height: 100vh;
+  background-color: var(--background);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+div.playerPreviewContainer {
+  width: 100vw;
+  height: 100vh;
+  background-color: var(--background);
+  padding: 20px;
+  box-sizing: border-box;
+  gap: 20px;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+}
+
+p.questionNumber {
+  color: var(--primary-color);
+  font-size: 20px;
+}
