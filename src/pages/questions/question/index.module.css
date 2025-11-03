@@ -1,4 +1,4 @@
-div.previewPageContainer {
+div.questionPageContainer {
   width: 100vw;
   min-height: 100vh;
   background-color: var(--background);
@@ -9,7 +9,7 @@ div.previewPageContainer {
   box-sizing: border-box;
 }
 
-div.playerPreviewContainer {
+div.playerQuestionContainer {
   width: 100vw;
   height: 100vh;
   background-color: var(--background);

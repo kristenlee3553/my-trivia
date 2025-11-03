@@ -1,38 +1,71 @@
 import { Box, Typography } from "@mui/material";
-import ThemeWrapper from "../../../common/theme";
+import type { QuestionRuntime } from "../../../common/types";
 import styles from "./PreviewPage.module.css";
+import ThemeWrapper from "../../../common/theme";
 import type { QuestionAuthor } from "../../../common/types";
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import VideoDisplay from "../VideoDisplay";
 
-type PreviewComponentProps = {
+type QuestionPageProps = {
+  isHost: boolean;
+  question: QuestionRuntime;
+  questionNumber: number;
+  totalQuestions: number;
+  onQuestionComplete: () => void;
+};
+
+export default function QuestionPage({
+  isHost,
+  question,
+  questionNumber,
+  totalQuestions,
+  onQuestionComplete,
+}: QuestionPageProps) {
+  return isHost ? (
+    <QuestionComponent
+      question={question}
+      questionNumber={questionNumber}
+      totalQuestions={totalQuestions}
+      onComplete={onQuestionComplete}
+    />
+  ) : (
+    <Box className={styles.playerQuestionContainer}>
+      <Typography variant="h1">Look up at the host screen!</Typography>
+      <Typography>
+        Perhaps in the future, there will be cool UI here...
+      </Typography>
+    </Box>
+  );
+}
+
+type QuestionComponentProps = {
   question: QuestionAuthor;
   onComplete: () => void;
   questionNumber?: number;
   totalQuestions?: number;
 };
 
-type PreviewPhase =
+type QuestionPhase =
   | "doublePoints"
   | "questionType"
   | "question"
   | "initial"
   | "video";
 
-export function PreviewComponent({
+function QuestionComponent({
   question,
   onComplete,
   questionNumber,
   totalQuestions,
-}: PreviewComponentProps) {
-  const [phase, setPhase] = useState<PreviewPhase>("initial");
+}: QuestionComponentProps) {
+  const [phase, setPhase] = useState<QuestionPhase>("initial");
   const [progress, setProgress] = useState<number>(0);
 
   useEffect(() => {
     // Decide what to show
     if (phase === "initial") {
-      const newPhase: PreviewPhase = question.doublePoints
+      const newPhase: QuestionPhase = question.doublePoints
         ? "doublePoints"
         : "questionType";
       setPhase(newPhase);
@@ -74,7 +107,7 @@ export function PreviewComponent({
 
   return (
     <ThemeWrapper>
-      <Box className={styles.previewPageContainer}>
+      <Box className={styles.questionPageContainer}>
         <Typography
           className={styles.questionNumber}
         >{`Q${questionNumber ?? 0} of ${totalQuestions ?? 0}`}</Typography>

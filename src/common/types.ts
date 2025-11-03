@@ -4,7 +4,7 @@ import { v4 as uuidv4 } from "uuid";
 // Enums
 export const LobbyStatusSchema = z.enum([
   "notStarted",
-  "preview",
+  "question",
   "answering",
   "showAnswer",
   "leaderboard",

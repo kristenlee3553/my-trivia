@@ -2,7 +2,7 @@ import ThemeWrapper from "../../common/theme";
 import { useLobby } from "../../context/LobbyContext";
 import { useUser } from "../../context/UserContext";
 import SomethingWentWrong from "../error/SomethingWentWrong";
-import PreviewPage from "./preview/PreviewPage";
+import QuestionPage from "./question";
 
 export default function QuestionsPage() {
   const { lobby } = useLobby();
@@ -25,14 +25,14 @@ export default function QuestionsPage() {
   let content;
 
   switch (lobbyStatus) {
-    case "preview":
+    case "question":
       content = (
-        <PreviewPage
+        <QuestionPage
           isHost={Boolean(isHost)}
           question={currentQuestion}
           questionNumber={currentIndex}
           totalQuestions={gameInfo.questions.length}
-          onPreviewComplete={() => console.log("SHOW QUESTIONS PAGE")}
+          onQuestionComplete={() => console.log("SHOW QUESTIONS PAGE")}
         />
       );
       break;
