@@ -1,5 +1,70 @@
 import { createTheme, ThemeProvider, type ThemeOptions } from "@mui/material";
 
+type OptionColorDetails = {
+  background: string;
+  toggledBg: string;
+  hoverBg: string;
+  color: string;
+  toggledColor: string;
+};
+
+export const OPTION_COLORS = [
+  "red",
+  "blue",
+  "orange",
+  "green",
+  "pink",
+  "purple",
+] as const;
+
+export type OPTION_COLORS_KEYS = (typeof OPTION_COLORS)[number];
+
+export const OPTION_COLOR_MAP: Record<OPTION_COLORS_KEYS, OptionColorDetails> =
+  {
+    orange: {
+      background: "#FCA311",
+      hoverBg: "#E28F0F",
+      toggledBg: "#C47E0E",
+      color: "#14213D",
+      toggledColor: "#FFFFFF",
+    },
+    blue: {
+      background: "#118ab2",
+      hoverBg: "#0F799E",
+      toggledBg: "#0B5E7C",
+      color: "#14213D",
+      toggledColor: "#FFFFFF",
+    },
+    red: {
+      background: "#e63946",
+      toggledBg: "#B71C1C",
+      hoverBg: "#D32F2F",
+      color: "#FFFFFF",
+      toggledColor: "#FFFFFF",
+    },
+    green: {
+      background: "#06d6a0",
+      hoverBg: "#05B987",
+      toggledBg: "#03986F",
+      color: "#14213D",
+      toggledColor: "#FFFFFF",
+    },
+    purple: {
+      background: "#9b5de5",
+      hoverBg: "#8442D3",
+      toggledBg: "#6933B9",
+      color: "#FFFFFF",
+      toggledColor: "#FFFFFF",
+    },
+    pink: {
+      background: "#ff6b9a",
+      hoverBg: "#E25586",
+      toggledBg: "#c9446c",
+      color: "#ffffff",
+      toggledColor: "#FFFFFF",
+    },
+  };
+
 const themeOptions: ThemeOptions = {
   palette: {
     primary: {

@@ -9,6 +9,7 @@ import "./common/global.css";
 import { UserProvider } from "./context/UserContext.tsx";
 import { LobbyProvider } from "./context/LobbyContext.tsx";
 import LobbyPage from "./pages/lobby/LobbyPage.tsx";
+import PreviewPage from "./pages/preview/index.tsx";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
@@ -21,6 +22,7 @@ createRoot(document.getElementById("root")!).render(
             <Route path="/admin" element={<AdminPage />} />
             <Route path="/player" element={<PlayerPage />} />
             <Route path="/lobby" element={<LobbyPage />} />
+            <Route path="/preview" element={<PreviewPage />} />
           </Routes>
         </BrowserRouter>
       </LobbyProvider>

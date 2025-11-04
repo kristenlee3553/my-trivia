@@ -15,7 +15,7 @@ const introJson: GameAuthor = {
         "First we will start slow with 2 options! In chess, which direction does the bishop move in?",
       options: {
         answerType: "single",
-        options: ["diagonally", "horizontally/vertically"],
+        options: ["diagonally", "horizontally or vertically"],
       },
       correctAnswer: "diagonally",
     },
