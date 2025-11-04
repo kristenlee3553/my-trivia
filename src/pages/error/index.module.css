@@ -8,10 +8,11 @@
   align-items: center;
   padding: 20px;
   gap: 30px;
+  flex-direction: column;
 }
 
 h1.title {
-  font-size: 35px;
+  font-size: 40px;
   color: var(--primary-color);
   font-weight: bold;
 }

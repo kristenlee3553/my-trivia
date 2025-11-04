@@ -1,0 +1,6 @@
+div.previewPageContainer {
+  background-color: var(--background);
+  justify-content: center;
+  box-sizing: border-box;
+  width: 100%;
+}

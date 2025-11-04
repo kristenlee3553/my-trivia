@@ -28,7 +28,8 @@ import { useLobby } from "../../context/LobbyContext.tsx";
 
 export type GameType = "intro" | "groupChat" | "spotify";
 
-const gameFiles: Record<GameType, GameAuthor> = {
+// TEMP EXPORT FOR DEBUG
+export const gameFiles: Record<GameType, GameAuthor> = {
   intro: GameAuthorSchema.parse(introJson),
   groupChat: GameAuthorSchema.parse(introJson),
   spotify: GameAuthorSchema.parse(introJson),
@@ -161,6 +162,7 @@ export default function HostPage() {
             variant="primary"
             className={styles.gameControlButton}
             disabled={!selectedGame || creating}
+            onClick={() => navigate("/preview")}
           >
             View Questions
           </Button>
