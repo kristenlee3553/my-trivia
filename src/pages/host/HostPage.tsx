@@ -82,6 +82,7 @@ export default function HostPage() {
         hostId: hostId,
         players: {},
         startTime: new Date().toISOString(),
+        lastUpdated: new Date().toISOString(),
         lobbyStatus: "notStarted",
         gameInfo: runtimeGame,
         currentQuestion: "",

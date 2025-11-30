@@ -1,4 +1,4 @@
-import { ref, get, child, push, set, remove } from "firebase/database";
+import { ref, get, child, push, set, remove, update } from "firebase/database";
 import { db } from "./firebase";
 import { DATABASE } from "./constants";
 import {
@@ -51,8 +51,7 @@ export async function addPlayerToLobby(
     });
 
     await set(playerRef, playerData);
-
-    console.log("Player added:", playerRef.key);
+    await updateLobbyTime(lobbyCode);
     return playerData;
   } catch (error) {
     console.error("Error adding player:", error);
@@ -146,7 +145,35 @@ export async function removePlayerFromLobby(
     await remove(
       ref(db, `${DATABASE.LOBBY}/${lobbyCode}/${DATABASE.PLAYERS}/${playerId}`)
     );
+    await updateLobbyTime(lobbyCode);
   } catch (error) {
     console.error(error);
   }
+}
+
+async function updateLobbyTime(lobbyCode: string) {
+  await update(ref(db, `${DATABASE.LOBBY}/${lobbyCode}`), {
+    lastUpdated: new Date().toISOString(),
+  });
+}
+
+export async function cleanStaleLobbies() {
+  const snapshot = await get(ref(db, DATABASE.LOBBY));
+  if (!snapshot.exists()) return;
+
+  const now = Date.now();
+  const stale: string[] = [];
+
+  snapshot.forEach((child) => {
+    const lobby = child.val();
+
+    const last = new Date(lobby.lastActivityTime ?? lobby.startTime).getTime();
+
+    if (now - last > 24 * 60 * 60 * 1000) {
+      stale.push(child.key!);
+    }
+  });
+
+  // delete all stale lobbies
+  await Promise.all(stale.map((code) => removeLobby(code)));
 }

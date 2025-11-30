@@ -224,6 +224,7 @@ export const LobbySchema = z.object({
   hostId: z.string(),
   players: z.record(z.string(), PlayerSchema),
   startTime: z.string(), // ISO string
+  lastUpdated: z.string(),
   lobbyStatus: LobbyStatusSchema,
   gameInfo: GameRuntimeSchema,
   currentQuestion: z.uuid(), // points to the id of the question
