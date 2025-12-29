@@ -1,4 +1,4 @@
-import { ref, get, child, push, set, remove, update } from "firebase/database";
+import { ref, get, child, set, remove, update } from "firebase/database";
 import { db } from "./firebase";
 import { DATABASE } from "./constants";
 import {
@@ -84,36 +84,28 @@ export function createRuntimeGame(authorGame: GameAuthor): GameRuntime {
       // id
       const id = uuidv4();
 
-      // effective options: question overrides game default, else inherit
-      const effectiveOptions =
-        qAuthor.options ?? authorGame.defaultOptions ?? undefined;
-
       // effective timeLimit: per-question override else game default else undefined
       const timeLimit =
         qAuthor.timeLimit ?? authorGame.defaultTimeLimit ?? undefined;
 
       // Build runtime question (preserve display fields)
-      const runtimeQ: QuestionRuntime = {
+      const runtimeQ = {
         ...qAuthor,
         id,
-        options: effectiveOptions,
         timeLimit,
-        answers: {
-          answerType: effectiveOptions?.answerType ?? "single",
-          answers: {},
-        },
-      };
+        playerAnswers: {},
+      } as QuestionRuntime;
 
       return runtimeQ;
     }
   );
 
-  const runtimeGame: any = {
+  const runtimeGame: GameRuntime = {
     ...authorGame,
     questions: runtimeQuestions,
   };
 
-  return runtimeGame as GameRuntime;
+  return runtimeGame;
 }
 
 export async function createLobby(

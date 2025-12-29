@@ -1,11 +1,5 @@
-import {
-  createContext,
-  useContext,
-  useState,
-  useEffect,
-  type ReactNode,
-} from "react";
-import type { Player, Lobby } from "../common/types";
+import { createContext, useContext, useState, type ReactNode } from "react";
+import type { Lobby } from "../common/types";
 
 type LobbyContextType = {
   lobby: Lobby | null;

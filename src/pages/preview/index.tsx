@@ -2,9 +2,8 @@ import { Button, Stack, Typography } from "@mui/material";
 import ThemeWrapper from "../../common/theme";
 import type { GameRuntime } from "../../common/types";
 import { createRuntimeGame } from "../../firebase/lobby";
-import SomethingWentWrong from "../error/SomethingWentWrong";
 import { gameFiles } from "../host/HostPage";
-import BaseOptionGrid from "../questions/options/BaseOption";
+import BaseOptionGrid from "../game/options/BaseOption";
 import BaseCheckbox from "../../common/Checkbox";
 import { useState } from "react";
 import styles from "./index.module.css";
@@ -23,15 +22,15 @@ export default function PreviewPage() {
 
   if (curQuestion.options) {
     if (
-      curQuestion.options.answerType === "single" ||
-      curQuestion.options.answerType === "multi"
+      curQuestion.answerType === "single" ||
+      curQuestion.answerType === "multi"
     ) {
       content = (
         <BaseOptionGrid
           isHost={isHost}
-          options={curQuestion.options.options}
+          options={curQuestion.options}
           onSubmit={(answer) => console.log("Selected answer: ", answer)}
-          answerType={curQuestion.options.answerType}
+          answerType={curQuestion.answerType}
           hideSubmitButton
         />
       );
