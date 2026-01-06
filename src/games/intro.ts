@@ -1,7 +1,7 @@
 import type { GameAuthor, QuestionAuthor } from "../common/types";
 import Nectar from "../images/nectar.jpg";
 
-const introJson: GameAuthor = {
+const introGame: GameAuthor = {
   name: "Testing Testing!",
   defaultTimeLimit: 30,
   questions: [
@@ -135,4 +135,4 @@ const introJson: GameAuthor = {
   ],
 };
 
-export default introJson;
+export default introGame;

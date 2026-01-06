@@ -1,5 +1,4 @@
 import { Box, Button, Stack } from "@mui/material";
-import type { AnswerType, Options } from "../../../common/types";
 import SomethingWentWrong from "../../error/SomethingWentWrong";
 import {
   OPTION_COLOR_MAP,
@@ -8,22 +7,19 @@ import {
 } from "../../../common/theme";
 import { useState } from "react";
 import styles from "./BaseOption.module.css";
-
-export type BaseOptions = Extract<Options, { answerType: "single" | "multi" }>;
+import type { QuestionType } from "../../../common/types";
 
 type BaseOptionGridProps = {
   /**Pass options in the order you want displayed */
   options: string[];
-  onSubmit: (answer: string | string[]) => void;
-  isHost: boolean;
-  answerType: Extract<AnswerType, "single" | "multi">;
+  onSubmit?: (answer: string | string[]) => void;
+  answerType: Extract<QuestionType, "single" | "multi">;
   hideSubmitButton?: boolean;
 };
 
 export default function BaseOptionGrid({
   options,
   onSubmit,
-  isHost,
   answerType,
   hideSubmitButton,
 }: BaseOptionGridProps) {
@@ -61,35 +57,38 @@ export default function BaseOptionGrid({
                   : "1fr 1fr 1fr"
         }
       >
-        {options.map((opt, i) => (
-          <BaseOption
-            key={i}
-            text={opt}
-            color={OPTION_COLORS[i]}
-            singleSelect={answerType === "single"}
-            isCenterButton={false}
-            onClick={(toggled: boolean) => {
-              if (answerType === "single") {
-                onSubmit(opt);
-              } else {
-                setOptionsSelected((prev) => {
-                  if (toggled) {
-                    // Add the new option if not already in the array
-                    if (!prev.includes(opt)) {
-                      return [...prev, opt];
+        {options.map((opt, i) =>
+          onSubmit ? (
+            <BaseOption
+              key={i}
+              text={opt}
+              color={OPTION_COLORS[i]}
+              singleSelect={answerType === "single"}
+              onClick={(toggled: boolean) => {
+                if (answerType === "single") {
+                  onSubmit(opt);
+                } else {
+                  setOptionsSelected((prev) => {
+                    if (toggled) {
+                      // Add the new option if not already in the array
+                      if (!prev.includes(opt)) {
+                        return [...prev, opt];
+                      }
+                      return prev;
+                    } else {
+                      // Remove from the array
+                      return prev.filter((o) => o !== opt);
                     }
-                    return prev;
-                  } else {
-                    // Remove from the array
-                    return prev.filter((o) => o !== opt);
-                  }
-                });
-              }
-            }}
-          />
-        ))}
+                  });
+                }
+              }}
+            />
+          ) : (
+            <HostBaseOption text={opt} color={OPTION_COLORS[i]} key={i} />
+          )
+        )}
       </Box>
-      {!hideSubmitButton && !isHost && answerType === "multi" && (
+      {!hideSubmitButton && answerType === "multi" && onSubmit && (
         <Button
           variant="primary"
           onClick={() => onSubmit(optionsSelected)}
@@ -108,16 +107,9 @@ type BaseOptionProps = {
   text: string;
   color: OPTION_COLORS_KEYS;
   singleSelect: boolean;
-  isCenterButton: boolean;
 };
 
-function BaseOption({
-  onClick,
-  text,
-  color,
-  singleSelect,
-  isCenterButton,
-}: BaseOptionProps) {
+function BaseOption({ onClick, text, color, singleSelect }: BaseOptionProps) {
   const [selected, setSelected] = useState<boolean>(false);
 
   const {
@@ -135,15 +127,14 @@ function BaseOption({
         onClick(!selected);
         setSelected(!selected);
       }}
-      className={isCenterButton ? styles.centerBaseOption : ""}
+      className={styles.baseOption}
       sx={{
         backgroundColor: background,
         color: toggled ? toggledColor : textColor,
         borderRadius: toggled ? "4px" : "6px",
-        fontWeight: 600,
         transition: "all 0.15s ease-out",
         "&:hover": {
-          backgroundColor: background,
+          backgroundColor: hoverBg,
         },
         "&:active": {
           backgroundColor: toggledBg,
@@ -153,10 +144,29 @@ function BaseOption({
           outlineOffset: "6px",
           boxShadow: `0 0 10px ${toggledBg}`,
         }),
-        flexShrink: 0,
       }}
     >
       {text}
     </Button>
+  );
+}
+
+type HostBaseOptionProps = {
+  text: string;
+  color: OPTION_COLORS_KEYS;
+};
+
+export function HostBaseOption({ text, color }: HostBaseOptionProps) {
+  const { background, color: textColor } = OPTION_COLOR_MAP[color];
+  return (
+    <div
+      className={styles.baseOption}
+      style={{
+        backgroundColor: background,
+        color: textColor,
+      }}
+    >
+      {text}
+    </div>
   );
 }

@@ -68,30 +68,35 @@ export const OPTION_COLOR_MAP: Record<OPTION_COLORS_KEYS, OptionColorDetails> =
 const themeOptions: ThemeOptions = {
   palette: {
     primary: {
-      main: "#FCA311",
-      light: "#FDBD55",
-      dark: "#D28202",
-      contrastText: "black",
+      main: "#b490d6",
+      light: "#d5bdfc",
+      dark: "#8269a7",
+      contrastText: "#131f47",
     },
     secondary: {
-      main: "#2ec4b6",
-      contrastText: "black",
+      main: "#b6e1fa",
+      light: "#e0f2fe",
+      dark: "#131f47",
+      contrastText: "#fdeac9",
     },
     error: {
-      main: "#C1292E",
+      main: "#faa082",
+      light: "#ffc4b0",
     },
     text: {
-      primary: "#efefef",
-      secondary: "#BAC9E9",
-      disabled: "#888",
+      primary: "#fdeac9",
+      secondary: "#b6e1fa",
+      disabled: "#6b7aab",
     },
     background: {
-      default: "#14213d",
+      default: "#131f47",
+      paper: "#1c2b5e",
     },
     action: {
-      hover: "#1B2E55",
-      focus: "white",
-      disabled: "#1a1f3a",
+      hover: "rgba(182, 225, 250, 0.12)",
+      selected: "rgba(182, 225, 250, 0.2)",
+      focus: "#b6e1fa",
+      disabled: "rgba(253, 234, 201, 0.3)",
     },
   },
   spacing: (factor: number) => `${10 * factor}px`,
@@ -104,7 +109,7 @@ const themeOptions: ThemeOptions = {
         {
           props: { variant: "primary" },
           style: ({ theme }) => ({
-            border: `2px solid ${theme.palette.primary.main}`,
+            border: `2px solid ${theme.palette.primary.light}`,
             color: theme.palette.primary.main,
           }),
         },

@@ -90,14 +90,14 @@ type Ranking = {
 type Drawing = {
   answerType: EnsureValidQuestionType<"draw">;
   options: never;
-  correctAnswer: never;
+  correctAnswer: string;
   playerAnswers: Record<string, string>; // dataurl
 };
 
 type ShortAnswer = {
   answerType: EnsureValidQuestionType<"shortAnswer">;
   options: never;
-  correctAnswer: never;
+  correctAnswer: string;
   playerAnswers: Record<string, string>;
 };
 
@@ -114,15 +114,18 @@ type BaseQuestion = {
   doublePoints?: boolean;
 };
 
-export type QuestionAuthor = BaseQuestion &
-  Display &
-  Omit<QuestionTypeData, "playerAnswers">;
+type MergeAuthor<T> = T extends any
+  ? Omit<T, "playerAnswers"> & BaseQuestion & Display
+  : never;
 
-export type QuestionRuntime = BaseQuestion &
-  Display &
-  QuestionTypeData & {
-    id: string;
-  };
+// This creates a clean Union where 'answerType' is the clear boss
+export type QuestionAuthor = MergeAuthor<QuestionTypeData>;
+
+type DistributeRuntime<T> = T extends any
+  ? T & BaseQuestion & Display & { id: string }
+  : never;
+
+export type QuestionRuntime = DistributeRuntime<QuestionTypeData>;
 
 type BaseGame = {
   name: string;
@@ -141,6 +144,7 @@ export type Lobby = {
   lobbyCode: string;
   hostId: string;
   players: Record<string, Player>;
+  lobbyStatus: LobbyStatus;
   startTime: string;
   lastUpdated: string;
   gameData: GameRuntime;

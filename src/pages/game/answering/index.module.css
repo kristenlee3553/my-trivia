@@ -1,0 +1,95 @@
+div.hostContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  background-color: var(--background);
+  width: 100vw;
+  height: 100vh;
+  padding: 1.25rem;
+  box-sizing: border-box;
+
+  div.topQuestionRow {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    gap: 2rem;
+
+    div.questionNumber {
+      display: flex;
+      border: 2px solid var(--secondary-color);
+      border-radius: 8px;
+      padding: 0.5rem;
+      box-sizing: border-box;
+      align-items: center;
+      justify-content: center;
+      min-width: 60px;
+      width: 60px;
+
+      p {
+        color: var(--light-text);
+        font-weight: 600;
+        font-size: 1.5rem;
+        line-height: 1.5;
+      }
+    }
+
+    p.question {
+      color: var(--primary-color);
+      font-weight: 500;
+      line-height: 1.5;
+      font-size: 2rem;
+    }
+
+    div.timerContainer {
+      display: flex;
+      border: 2px solid var(--error);
+      border-radius: 8px;
+      padding: 0.625rem;
+      box-sizing: border-box;
+      justify-content: center;
+      align-items: center;
+      min-width: 60px;
+      width: 60px;
+
+      p {
+        font-weight: 500;
+        font-size: 1.5rem;
+        color: var(--error);
+      }
+    }
+
+    button.nextButton:global(.MuiButton-root) {
+      border-radius: 8px;
+      font-weight: 500;
+    }
+
+    div.timerContainer,
+    div.questionNumber,
+    button.nextButton:global(.MuiButton-root) {
+      height: 60px !important;
+    }
+  }
+
+  div.hostFooter {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    gap: 1;
+    justify-content: space-between;
+    align-items: center;
+
+    p {
+      color: var(--light-text);
+      font-weight: 500;
+      font-size: 1.25rem;
+      line-height: 1.5;
+    }
+  }
+}
+
+div.playerContainer {
+  width: 100vw;
+  height: 100vh;
+  padding: 20px;
+}

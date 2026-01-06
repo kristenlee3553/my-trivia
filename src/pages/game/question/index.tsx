@@ -1,6 +1,6 @@
 import { Box, Typography } from "@mui/material";
 import type { QuestionRuntime } from "../../../common/types";
-import styles from "./PreviewPage.module.css";
+import styles from "./index.module.css";
 import ThemeWrapper from "../../../common/theme";
 import type { QuestionAuthor } from "../../../common/types";
 import { useEffect, useState } from "react";
@@ -82,7 +82,7 @@ function QuestionComponent({
       let timeLimit = calcReadingTime(question);
 
       // Add video time to progress bar
-      if (question.type === "video") {
+      if (question.displayType === "video") {
         const newStartTime = question.startTime ?? 0;
         const newEndTime = question.endTime ?? 30;
         timeLimit += newEndTime - newStartTime + 1;
@@ -94,7 +94,7 @@ function QuestionComponent({
       }, 100);
 
       // If video and no prompt text, skip to video phase. Can clean this up
-      if (question.type === "video") {
+      if (question.displayType === "video") {
         if (!question.promptText) {
           setPhase("video");
         } else {
@@ -125,7 +125,7 @@ function QuestionComponent({
               transition={{ duration: 0.6, ease: "easeOut" }}
               className="text-3xl font-semibold text-blue-400"
             >
-              {question.options?.answerType} Question
+              {question.answerType} Question
             </motion.div>
           )}
 
@@ -139,7 +139,7 @@ function QuestionComponent({
               className="text-5xl font-bold max-w-4xl leading-snug"
             >
               {question.promptText}
-              {question.type === "image" && (
+              {question.displayType === "image" && (
                 <motion.img
                   src={question.imageUrl}
                   initial={{ opacity: 0, scale: 0.98 }}
@@ -157,7 +157,7 @@ function QuestionComponent({
               )}
             </motion.div>
           )}
-          {phase === "video" && question.type === "video" && (
+          {phase === "video" && question.displayType === "video" && (
             <motion.div
               key="video"
               initial={{ scale: 0.8, opacity: 0 }}
@@ -225,6 +225,6 @@ function calcReadingTime(question: QuestionAuthor): number {
   if (!question.promptText) return 0;
   const words = question.promptText.trim().split(/\s+/).length;
   const textTime = Math.min(2.5 + words * 0.35, 12);
-  const extraTime = question.type === "image" ? 3 : 0;
+  const extraTime = question.displayType === "image" ? 3 : 0;
   return extraTime + textTime; // seconds
 }

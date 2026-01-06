@@ -4,7 +4,7 @@ import type { GameRuntime } from "../../common/types";
 import { createRuntimeGame } from "../../firebase/lobby";
 import { gameFiles } from "../host/HostPage";
 import BaseOptionGrid from "../game/options/BaseOption";
-import BaseCheckbox from "../../common/Checkbox";
+import BaseCheckbox from "../../common/components/Checkbox";
 import { useState } from "react";
 import styles from "./index.module.css";
 import { useNavigate } from "react-router-dom";
@@ -27,9 +27,12 @@ export default function PreviewPage() {
     ) {
       content = (
         <BaseOptionGrid
-          isHost={isHost}
           options={curQuestion.options}
-          onSubmit={(answer) => console.log("Selected answer: ", answer)}
+          onSubmit={
+            isHost
+              ? undefined
+              : (answer) => console.log("Selected answer: ", answer)
+          }
           answerType={curQuestion.answerType}
           hideSubmitButton
         />

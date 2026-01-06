@@ -10,14 +10,10 @@ import styles from "./HostPage.module.css";
 import { useNavigate } from "react-router-dom";
 import ThemeWrapper from "../../common/theme";
 import GameTile from "./GameTile";
-import BaseCheckbox from "../../common/Checkbox";
+import BaseCheckbox from "../../common/components/Checkbox.tsx";
 import { useId, useState } from "react";
-import introJson from "../../games/intro.json.ts";
-import {
-  GameAuthorSchema,
-  type GameAuthor,
-  type Lobby,
-} from "../../common/types";
+import introGame from "../../games/intro.ts";
+import { type GameAuthor, type Lobby } from "../../common/types";
 import { useUser } from "../../context/UserContext.tsx";
 import {
   createLobby,
@@ -25,14 +21,16 @@ import {
   generateUniqueLobbyCode,
 } from "../../firebase/lobby.ts";
 import { useLobby } from "../../context/LobbyContext.tsx";
+import exposedQuiz from "../../games/diy-kahoot.ts";
 
-export type GameType = "intro" | "groupChat" | "spotify";
+export type GameType = "intro" | "groupChat" | "spotify" | "exposed";
 
 // TEMP EXPORT FOR DEBUG
 export const gameFiles: Record<GameType, GameAuthor> = {
-  intro: GameAuthorSchema.parse(introJson),
-  groupChat: GameAuthorSchema.parse(introJson),
-  spotify: GameAuthorSchema.parse(introJson),
+  intro: introGame,
+  exposed: exposedQuiz,
+  groupChat: introGame,
+  spotify: introGame,
 };
 
 export default function HostPage() {
@@ -84,7 +82,7 @@ export default function HostPage() {
         startTime: new Date().toISOString(),
         lastUpdated: new Date().toISOString(),
         lobbyStatus: "notStarted",
-        gameInfo: runtimeGame,
+        gameData: runtimeGame,
         currentQuestion: "",
         questionOrder: maybeOrder,
         currentIndex: 0,

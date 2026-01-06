@@ -1,7 +1,7 @@
 import { Box, Button, Stack, Typography } from "@mui/material";
 import ThemeWrapper from "../../common/theme";
 import styles from "./PlayerPage.module.css";
-import BaseTextField from "../../common/Textfield";
+import BaseTextField from "../../common/components/Textfield";
 import { useState } from "react";
 import { addPlayerToLobby, checkLobbyExists } from "../../firebase/lobby";
 import type { Lobby, Player } from "../../common/types";
