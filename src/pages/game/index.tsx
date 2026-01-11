@@ -2,7 +2,7 @@ import ThemeWrapper from "../../common/theme";
 import { useLobby } from "../../context/LobbyContext";
 import { useUser } from "../../context/UserContext";
 import SomethingWentWrong from "../error/SomethingWentWrong";
-import AnsweringPage from "./answering";
+import { HostAnswerPage, PlayerAnswerPage } from "./answering";
 import QuestionPage from "./question";
 
 export default function GameManager() {
@@ -13,7 +13,7 @@ export default function GameManager() {
     return <SomethingWentWrong optionalText="No lobby or user context" />;
   }
   const { lobbyStatus, currentIndex, gameData, lobbyCode } = lobby;
-  //const { isHost } = user.appUser;
+  const { playerData } = user.appUser;
   const isHost = true;
   const currentQuestion = lobby?.gameData.questions.find(
     (question) => question.id === lobby.currentQuestion
@@ -27,6 +27,8 @@ export default function GameManager() {
   }
 
   function onQuestionPreviewFinish() {}
+
+  function onAnsweringFinish() {}
 
   let content;
 
@@ -43,13 +45,17 @@ export default function GameManager() {
       );
       break;
     case "answering":
-      content = (
-        <AnsweringPage
-          isHost={Boolean(isHost)}
-          onQuestionSubmit={() => {}}
-          question={currentQuestion}
+      content = isHost ? (
+        <HostAnswerPage
           lobbyCode={lobbyCode}
-          questionNumber={lobby.currentIndex}
+          onNextPhase={onAnsweringFinish}
+          question={currentQuestion}
+          questionNumber={currentIndex}
+        />
+      ) : (
+        <PlayerAnswerPage
+          question={currentQuestion}
+          playerId={playerData?.uid ?? "1111111"}
         />
       );
       break;

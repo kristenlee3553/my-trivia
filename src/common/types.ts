@@ -22,12 +22,12 @@ export type DisplayType = "video" | "text" | "image";
 
 type EnsureValidDisplayType<T extends DisplayType> = T;
 
-type DisplayText = {
+export type DisplayText = {
   displayType: EnsureValidDisplayType<"text">;
   promptText: string;
 };
 
-type DisplayVideo = {
+export type DisplayVideo = {
   displayType: EnsureValidDisplayType<"video">;
   videoUrl: string;
   startTime?: number;
@@ -36,7 +36,7 @@ type DisplayVideo = {
   promptText?: string;
 };
 
-type DisplayImage = {
+export type DisplayImage = {
   displayType: EnsureValidDisplayType<"image">;
   imageUrl: string;
   promptText?: string;
@@ -54,21 +54,21 @@ export type QuestionType =
 
 type EnsureValidQuestionType<T extends QuestionType> = T;
 
-type SingleSelect = {
+export type SingleSelect = {
   answerType: EnsureValidQuestionType<"single">;
   options: string[];
   correctAnswer: string;
   playerAnswers: Record<string, string>;
 };
 
-type MultiSelect = {
+export type MultiSelect = {
   answerType: EnsureValidQuestionType<"multi">;
   options: string[];
   correctAnswer: string[];
   playerAnswers: Record<string, string[]>;
 };
 
-type Matching = {
+export type Matching = {
   answerType: EnsureValidQuestionType<"matching">;
   options: {
     left: Set<string>;
@@ -78,7 +78,7 @@ type Matching = {
   playerAnswers: Record<string, Record<string, string>>;
 };
 
-type Ranking = {
+export type Ranking = {
   answerType: EnsureValidQuestionType<"ranking">;
   options: string[];
   leftLabel: string;
@@ -87,14 +87,14 @@ type Ranking = {
   playerAnswers: Record<string, string[]>;
 };
 
-type Drawing = {
+export type Drawing = {
   answerType: EnsureValidQuestionType<"draw">;
   options: never;
   correctAnswer: string;
   playerAnswers: Record<string, string>; // dataurl
 };
 
-type ShortAnswer = {
+export type ShortAnswer = {
   answerType: EnsureValidQuestionType<"shortAnswer">;
   options: never;
   correctAnswer: string;
@@ -112,6 +112,7 @@ type QuestionTypeData =
 type BaseQuestion = {
   timeLimit?: number;
   doublePoints?: boolean;
+  correctAnswerDisplay?: Display;
 };
 
 type MergeAuthor<T> = T extends any

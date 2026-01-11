@@ -28,7 +28,7 @@ const introGame: GameAuthor = {
         "Introducing a new question type! It's multi-select! Select all that are part of the 7 deadly sins!",
       answerType: "multi",
       options: ["Jealousy", "Hypocrisy", "Greed", "Sloth"],
-      correctAnswer: ["Sloth, Greed"],
+      correctAnswer: ["Sloth", "Greed"],
     },
     {
       displayType: "text",
@@ -104,6 +104,20 @@ const introGame: GameAuthor = {
       leftLabel: "Most Players",
       rightLabel: "Least Players",
       correctAnswer: ["Soccer", "Baseball", "Ice Hockey", "Basketball"],
+    } as QuestionAuthor,
+    {
+      displayType: "text",
+      timeLimit: 45,
+      promptText: "Time to flex your drawing skills. Draw a dodecagon.",
+      answerType: "draw",
+      correctAnswer: "URL",
+    } as QuestionAuthor,
+    {
+      displayType: "text",
+      timeLimit: 45,
+      answerType: "shortAnswer",
+      promptText: "TBD",
+      correctAnswer: "TBD",
     } as QuestionAuthor,
     {
       displayType: "text",

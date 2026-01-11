@@ -13,7 +13,11 @@ import GameTile from "./GameTile";
 import BaseCheckbox from "../../common/components/Checkbox.tsx";
 import { useId, useState } from "react";
 import introGame from "../../games/intro.ts";
-import { type GameAuthor, type Lobby } from "../../common/types";
+import {
+  type GameAuthor,
+  type GameRuntime,
+  type Lobby,
+} from "../../common/types";
 import { useUser } from "../../context/UserContext.tsx";
 import {
   createLobby,
@@ -21,7 +25,7 @@ import {
   generateUniqueLobbyCode,
 } from "../../firebase/lobby.ts";
 import { useLobby } from "../../context/LobbyContext.tsx";
-import exposedQuiz from "../../games/diy-kahoot.ts";
+import exposedQuiz from "../../games/exposed.ts";
 
 export type GameType = "intro" | "groupChat" | "spotify" | "exposed";
 
@@ -64,13 +68,10 @@ export default function HostPage() {
       // Runtime Game
       const runtimeGame = createRuntimeGame(gameFiles[selectedGame]);
 
-      // determine question order (use IDs as created)
-      const questionOrder = runtimeGame.questions.map((q) => q.id);
-
-      // optionally shuffle questionOrder if shuffleQuestions is true
-      const maybeOrder = shuffleQuestions
-        ? shuffleArray([...questionOrder])
-        : questionOrder;
+      const preparedGame = prepareGameForLobby(runtimeGame, {
+        shuffleAnswers,
+        shuffleQuestions,
+      });
 
       const hostId = userContext.appUser.uid;
 
@@ -82,9 +83,9 @@ export default function HostPage() {
         startTime: new Date().toISOString(),
         lastUpdated: new Date().toISOString(),
         lobbyStatus: "notStarted",
-        gameData: runtimeGame,
+        gameData: preparedGame,
         currentQuestion: "",
-        questionOrder: maybeOrder,
+        questionOrder: preparedGame.questions.map((q) => q.id),
         currentIndex: 0,
         gameOptions: {
           shuffleQuestions,
@@ -213,4 +214,59 @@ function shuffleArray<T>(arr: T[]) {
     [arr[i], arr[j]] = [arr[j], arr[i]];
   }
   return arr;
+}
+
+function prepareGameForLobby(
+  game: GameRuntime,
+  options: Lobby["gameOptions"]
+): GameRuntime {
+  let processedQuestions = [...game.questions];
+
+  // 1. Shuffle the Questions if enabled
+  if (options.shuffleQuestions) {
+    processedQuestions = shuffleArray(processedQuestions);
+  }
+
+  // 2. Shuffle the Answers (Options) within each question if enabled
+  if (options.shuffleAnswers) {
+    processedQuestions = processedQuestions.map((q) => {
+      // Create a shallow copy of the question
+      const question = { ...q };
+
+      switch (question.answerType) {
+        case "single":
+        case "multi":
+        case "ranking":
+          // These use simple string arrays for options
+          return {
+            ...question,
+            options: shuffleArray(question.options as string[]),
+          };
+
+        case "matching":
+          // Matching has left and right sets.
+          // We convert to arrays, shuffle, and convert back to Sets.
+          return {
+            ...question,
+            options: {
+              left: new Set(shuffleArray(Array.from(question.options.left))),
+              right: new Set(shuffleArray(Array.from(question.options.right))),
+            },
+          };
+
+        case "draw":
+        case "shortAnswer":
+          // No options to shuffle for these types
+          return question;
+
+        default:
+          return question;
+      }
+    });
+  }
+
+  return {
+    ...game,
+    questions: processedQuestions,
+  };
 }

@@ -1,4 +1,4 @@
-import { Box, Button, Stack } from "@mui/material";
+import { Box, Button, Stack, useMediaQuery, useTheme } from "@mui/material";
 import SomethingWentWrong from "../../error/SomethingWentWrong";
 import {
   OPTION_COLOR_MAP,
@@ -6,23 +6,29 @@ import {
   type OPTION_COLORS_KEYS,
 } from "../../../common/theme";
 import { useState } from "react";
-import styles from "./BaseOption.module.css";
-import type { QuestionType } from "../../../common/types";
+import styles from "./index.module.css";
+import type { MultiSelect, SingleSelect } from "../../../common/types";
 
-type BaseOptionGridProps = {
-  /**Pass options in the order you want displayed */
-  options: string[];
-  onSubmit?: (answer: string | string[]) => void;
-  answerType: Extract<QuestionType, "single" | "multi">;
+type BaseOptionGridProps<T extends "single" | "multi"> = {
+  /** Pass options in the order you want displayed */
+  options: T extends "single"
+    ? SingleSelect["options"]
+    : MultiSelect["options"];
+  onSubmit?: (
+    answer: T extends "single"
+      ? SingleSelect["correctAnswer"]
+      : MultiSelect["correctAnswer"]
+  ) => void;
+  answerType: T;
   hideSubmitButton?: boolean;
 };
 
-export default function BaseOptionGrid({
+export default function BaseOptionGrid<T extends "single" | "multi">({
   options,
   onSubmit,
   answerType,
   hideSubmitButton,
-}: BaseOptionGridProps) {
+}: BaseOptionGridProps<T>) {
   const numOptions = options.length;
   if (numOptions < 2) {
     return <SomethingWentWrong optionalText="Must have at least 2 options!" />;
@@ -31,7 +37,7 @@ export default function BaseOptionGrid({
   const [optionsSelected, setOptionsSelected] = useState<string[]>([]);
 
   return (
-    <Stack spacing={1.5} className={styles.baseOptionGridContainer}>
+    <Stack spacing={2} className={styles.baseOptionGridContainer}>
       <Box
         className={styles.baseOptionGrid}
         gridTemplateColumns={
@@ -66,7 +72,7 @@ export default function BaseOptionGrid({
               singleSelect={answerType === "single"}
               onClick={(toggled: boolean) => {
                 if (answerType === "single") {
-                  onSubmit(opt);
+                  (onSubmit as (val: string) => void)(opt);
                 } else {
                   setOptionsSelected((prev) => {
                     if (toggled) {
@@ -91,8 +97,8 @@ export default function BaseOptionGrid({
       {!hideSubmitButton && answerType === "multi" && onSubmit && (
         <Button
           variant="primary"
-          onClick={() => onSubmit(optionsSelected)}
-          sx={{ width: "90%", alignSelf: "center" }}
+          onClick={() => (onSubmit as (a: string[]) => void)(optionsSelected)}
+          sx={{ width: "100%" }}
           disabled={optionsSelected.length === 0}
         >
           Submit
@@ -111,6 +117,8 @@ type BaseOptionProps = {
 
 function BaseOption({ onClick, text, color, singleSelect }: BaseOptionProps) {
   const [selected, setSelected] = useState<boolean>(false);
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   const {
     background,
@@ -120,6 +128,7 @@ function BaseOption({ onClick, text, color, singleSelect }: BaseOptionProps) {
     hoverBg,
   } = OPTION_COLOR_MAP[color];
   const toggled = !singleSelect && selected;
+  const bgColor = singleSelect ? toggledBg : toggled ? toggledBg : background;
 
   return (
     <Button
@@ -129,21 +138,13 @@ function BaseOption({ onClick, text, color, singleSelect }: BaseOptionProps) {
       }}
       className={styles.baseOption}
       sx={{
-        backgroundColor: background,
-        color: toggled ? toggledColor : textColor,
+        background: bgColor,
+        color: singleSelect ? toggledColor : toggled ? toggledColor : textColor,
         borderRadius: toggled ? "4px" : "6px",
         transition: "all 0.15s ease-out",
         "&:hover": {
-          backgroundColor: hoverBg,
+          background: isMobile ? bgColor : hoverBg,
         },
-        "&:active": {
-          backgroundColor: toggledBg,
-        },
-        ...(toggled && {
-          outline: `2px solid ${toggledBg}`,
-          outlineOffset: "6px",
-          boxShadow: `0 0 10px ${toggledBg}`,
-        }),
       }}
     >
       {text}
@@ -157,13 +158,13 @@ type HostBaseOptionProps = {
 };
 
 export function HostBaseOption({ text, color }: HostBaseOptionProps) {
-  const { background, color: textColor } = OPTION_COLOR_MAP[color];
+  const { toggledBg, toggledColor } = OPTION_COLOR_MAP[color];
   return (
     <div
       className={styles.baseOption}
       style={{
-        backgroundColor: background,
-        color: textColor,
+        backgroundColor: toggledBg,
+        color: toggledColor,
       }}
     >
       {text}

@@ -22,45 +22,45 @@ export type OPTION_COLORS_KEYS = (typeof OPTION_COLORS)[number];
 export const OPTION_COLOR_MAP: Record<OPTION_COLORS_KEYS, OptionColorDetails> =
   {
     orange: {
-      background: "#FCA311",
-      hoverBg: "#E28F0F",
-      toggledBg: "#C47E0E",
-      color: "#14213D",
-      toggledColor: "#FFFFFF",
+      background: "#2a2215", // Dark mud/brown
+      hoverBg: "#FFD27D44",
+      toggledBg: "#FFD27D", // Bright Sun
+      color: "#FFD27D", // Text matches the glow when unselected
+      toggledColor: "#131f47",
     },
     blue: {
-      background: "#118ab2",
-      hoverBg: "#0F799E",
-      toggledBg: "#0B5E7C",
-      color: "#14213D",
+      background: "#0d2035", // Deep Navy
+      hoverBg: "#00D2FF44",
+      toggledBg: "#00D2FF", // Electric Cyan
+      color: "#00D2FF",
       toggledColor: "#FFFFFF",
     },
     red: {
-      background: "#e63946",
-      toggledBg: "#B71C1C",
-      hoverBg: "#D32F2F",
-      color: "#FFFFFF",
+      background: "#2d1618", // Dark Wine
+      hoverBg: "#FF4D4D44",
+      toggledBg: "#FF4D4D", // Bright Neon Red
+      color: "#FF4D4D",
       toggledColor: "#FFFFFF",
     },
     green: {
-      background: "#06d6a0",
-      hoverBg: "#05B987",
-      toggledBg: "#03986F",
-      color: "#14213D",
-      toggledColor: "#FFFFFF",
+      background: "#122a24", // Dark Forest
+      hoverBg: "#00FFB244",
+      toggledBg: "#00FFB2", // Acid Green
+      color: "#00FFB2",
+      toggledColor: "#131f47",
     },
     purple: {
-      background: "#9b5de5",
-      hoverBg: "#8442D3",
-      toggledBg: "#6933B9",
-      color: "#FFFFFF",
+      background: "#1f1430", // Dark Grape
+      hoverBg: "#B388FF44",
+      toggledBg: "#B388FF", // Bright Lavender
+      color: "#B388FF",
       toggledColor: "#FFFFFF",
     },
     pink: {
-      background: "#ff6b9a",
-      hoverBg: "#E25586",
-      toggledBg: "#c9446c",
-      color: "#ffffff",
+      background: "#2d141e", // Dark Plum
+      hoverBg: "#FF2E7E44",
+      toggledBg: "#FF2E7E", // Hot Pink
+      color: "#FF2E7E",
       toggledColor: "#FFFFFF",
     },
   };

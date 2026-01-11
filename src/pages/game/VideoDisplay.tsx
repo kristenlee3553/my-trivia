@@ -3,8 +3,8 @@ import { useEffect, useRef } from "react";
 
 type VideoDisplayProps = {
   videoUrl: string;
-  startTime: number;
-  endTime: number;
+  startTime?: number;
+  endTime?: number;
   /** Default will loop */
   onVideoEnd?: () => void;
   className?: string;
@@ -60,6 +60,8 @@ export default function VideoDisplay({
     <YouTube
       videoId={videoId ?? ""}
       opts={{
+        width: "100%",
+        height: "100%",
         playerVars: {
           autoplay: 1,
           controls: 0,
