@@ -1,5 +1,5 @@
 import { Divider, Typography } from "@mui/material";
-import type { Player, QuestionRuntime } from "../../../common/types";
+import type { Lobby, Player, QuestionRuntime } from "../../../common/types";
 import {
   HostShowAnswerDrawing,
   HostShowAnswerMatching,
@@ -10,8 +10,6 @@ import {
   type ShowAnswerHeaderProps,
 } from "./HostComponents";
 import styles from "./index.module.css";
-import { useLobby } from "../../../context/LobbyContext";
-import SomethingWentWrong from "../../error/SomethingWentWrong";
 import { MediaDisplayContainer } from "../answering";
 import { getUpdatedPlayer, isQuestionCorrect } from "../../logic";
 import PlayerAvatar from "../../../common/components/icons";
@@ -22,18 +20,17 @@ import { OPTION_COLOR_MAP } from "../../../common/theme";
 type ShowAnswerHostPageProps = {
   question: QuestionRuntime;
   onNextPhase: ShowAnswerHeaderProps["onNext"];
+  players: Lobby["players"];
+  lobbyCode: Lobby["lobbyCode"];
 };
 
 export function ShowAnswerHostPage({
   onNextPhase,
   question,
+  lobbyCode,
+  players,
 }: ShowAnswerHostPageProps) {
-  const { lobby } = useLobby();
-  if (!lobby) {
-    return <SomethingWentWrong optionalText="No Lobby Context" />;
-  }
   const { promptText, correctAnswerDisplay, answerType } = question;
-  const { players, lobbyCode } = lobby;
 
   let content = null;
 
@@ -105,16 +102,16 @@ type ShowAnswerPlayerProps = {
   question: QuestionRuntime;
 };
 
+// TO DO make this use the root index.module.css styles
 export function ShowAnswerPlayerPage({
   player,
   question,
 }: ShowAnswerPlayerProps) {
-  const isTest = true;
-  const updatedPlayer = getUpdatedPlayer(question, player, isTest);
+  const updatedPlayer = getUpdatedPlayer(question, player);
   const { playerAnswers } = question;
   const { nickname, streak, score, avatarKey, uid } = updatedPlayer;
 
-  const playerAnswer = playerAnswers[isTest ? 1001 : uid];
+  const playerAnswer = playerAnswers[uid];
   const isCorrect = playerAnswer
     ? isQuestionCorrect(playerAnswer.accuracy)
     : false;

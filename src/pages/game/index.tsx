@@ -5,6 +5,7 @@ import SomethingWentWrong from "../error/SomethingWentWrong";
 import { HostAnswerPage, PlayerAnswerPage } from "./answering";
 import { ShowAnswerHostPage, ShowAnswerPlayerPage } from "./showAnswer";
 import QuestionPage from "./question";
+import { HostLeaderboardPage, PlayerLeaderboardPage } from "./leaderboard";
 
 export default function GameManager() {
   const { lobby } = useLobby();
@@ -13,7 +14,7 @@ export default function GameManager() {
     console.error("No lobby or user context");
     return <SomethingWentWrong optionalText="No lobby or user context" />;
   }
-  const { lobbyStatus, currentIndex, gameData, lobbyCode } = lobby;
+  const { lobbyStatus, currentIndex, gameData, lobbyCode, players } = lobby;
   const { playerData } = user.appUser;
 
   if (!playerData) {
@@ -39,8 +40,11 @@ export default function GameManager() {
   // Update Player object and PlayerAnswerData. This is final.
   function onShowAnswerFinish() {}
 
+  function onLeaderboardFinish() {}
+
   let content;
 
+  // TO DO CLEANUP STYLES AS FOOTER AND HEADER CODE IS REPEATED
   switch (lobbyStatus) {
     case "question":
       content = (
@@ -70,9 +74,27 @@ export default function GameManager() {
         <ShowAnswerHostPage
           question={currentQuestion}
           onNextPhase={onShowAnswerFinish}
+          players={players}
+          lobbyCode={lobbyCode}
         />
       ) : (
         <ShowAnswerPlayerPage question={currentQuestion} player={playerData} />
+      );
+      break;
+    case "leaderboard":
+      content = isHost ? (
+        <HostLeaderboardPage
+          lobbyCode={lobbyCode}
+          onNextPhase={onLeaderboardFinish}
+          question={currentQuestion}
+          players={players}
+        />
+      ) : (
+        <PlayerLeaderboardPage
+          question={currentQuestion}
+          players={players}
+          player={playerData}
+        />
       );
       break;
     default:

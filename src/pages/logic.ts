@@ -1,5 +1,6 @@
 import { OPTION_COLORS, OPTION_COLOR_MAP } from "../common/theme";
 import type {
+  Lobby,
   Matching,
   MultiSelect,
   Player,
@@ -166,4 +167,15 @@ export function getUpdatedPlayer(
     streak: newStreak,
     numCorrect,
   };
+}
+
+export function getSortedPlayersByScore(
+  players: Lobby["players"],
+  order: "asc" | "desc"
+): Player[] {
+  if (order === "asc") {
+    return Object.values(players).sort((a, b) => a.score - b.score);
+  }
+
+  return Object.values(players).sort((a, b) => b.score - a.score);
 }
