@@ -1,5 +1,6 @@
 import type { GameAuthor, QuestionAuthor } from "../common/types";
 import Nectar from "../images/nectar.jpg";
+import Dodecagon from "../images/dodecagon.png";
 
 const introGame: GameAuthor = {
   name: "Testing Testing!",
@@ -37,7 +38,7 @@ const introGame: GameAuthor = {
         "5 options! Select all the resources required to build a city in Catan!",
       answerType: "multi",
       options: ["Wood", "Brick", "Sheep", "Wheat", "Ore"],
-      correctAnswer: ["Wood, Brick, Sheep, Wheat"],
+      correctAnswer: ["Wood", "Brick", "Sheep", "Wheat"],
     },
     {
       displayType: "video",
@@ -110,14 +111,16 @@ const introGame: GameAuthor = {
       timeLimit: 45,
       promptText: "Time to flex your drawing skills. Draw a dodecagon.",
       answerType: "draw",
-      correctAnswer: "URL",
+      correctAnswer: Dodecagon,
     } as QuestionAuthor,
     {
       displayType: "text",
       timeLimit: 45,
       answerType: "shortAnswer",
-      promptText: "TBD",
-      correctAnswer: "TBD",
+      promptText:
+        "Write a haiku about the person whose birthday comes after yours.",
+      correctAnswer:
+        "A swan of beauty \nMakes our asses dance all day \nChalant is her name",
     } as QuestionAuthor,
     {
       displayType: "text",

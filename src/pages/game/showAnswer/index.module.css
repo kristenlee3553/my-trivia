@@ -1,0 +1,589 @@
+div.showAnswerHostContainer {
+  display: flex;
+  flex-direction: column;
+  background-color: var(--background);
+  width: 100vw;
+  height: 100vh;
+  padding: 1.25rem;
+  box-sizing: border-box;
+  gap: 1em;
+
+  div.displayContainerShowAnswer {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    max-height: 300px;
+
+    p {
+      color: var(--light-text);
+      font-size: 0.9rem;
+      font-weight: 500;
+    }
+  }
+}
+
+div.showAnswerHeaderRow {
+  display: flex;
+  flex-direction: row;
+  box-sizing: border-box;
+  padding: 0.25rem;
+  width: 100%;
+
+  &:has(> :only-child) {
+    justify-content: flex-end;
+  }
+
+  &:has(> :not(:only-child)) {
+    justify-content: space-between;
+    gap: 1rem;
+  }
+  p {
+    color: var(--primary-color);
+    font-weight: 500;
+    line-height: 1.5;
+    font-size: 1.5rem;
+  }
+
+  button.nextButton:global(.MuiButton-root) {
+    border-radius: 8px;
+    font-weight: 500;
+    height: 45px;
+  }
+}
+
+div.showAnswerFooterRow {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  gap: 1;
+  justify-content: space-between;
+  align-items: center;
+
+  p.lobbyCode {
+    color: var(--light-text);
+    font-weight: 500;
+    font-size: 1.25rem;
+  }
+}
+
+div.hostControlDrawer {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 1rem 0;
+  padding-right: 1rem;
+
+  div.tableHeader {
+    align-items: center;
+    text-align: center;
+    p {
+      color: var(--secondary-color);
+      font-weight: 600;
+      font-size: 1rem;
+    }
+  }
+
+  .centeredCell {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+  }
+
+  p.playerName {
+    color: var(--light-text);
+    font-weight: 400;
+    font-size: 1rem;
+    line-height: 1.5;
+  }
+
+  div.controlWrapper {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  div.buttonRow {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 1rem;
+    width: 100%;
+
+    button::global(.MuiButton-root) {
+      height: 45px;
+    }
+  }
+}
+
+div.hostShowAnswerSingleMulti {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  padding: 0 0.5rem;
+  gap: 1rem;
+
+  div.optionContainer {
+    display: flex;
+    flex-direction: row;
+    flex: 1;
+    align-items: center;
+    gap: 1.5rem;
+    overflow: hidden;
+
+    div.checkmarkContainer {
+      display: flex;
+      flex-direction: row;
+      min-width: 1%;
+      max-width: 1%;
+
+      svg {
+        color: aquamarine;
+      }
+    }
+
+    div.optionLabelContainer {
+      display: flex;
+      border-radius: 8px;
+      overflow: hidden;
+      min-width: 25%;
+      max-width: 25%;
+      height: 100%;
+      box-sizing: border-box;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+      padding: 0.5rem;
+
+      p {
+        font-size: 1rem;
+        font-weight: 600;
+        /* Ellipsis properties must be on the text holder */
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+
+        /* Crucial for flex children: prevents the P from 
+       pushing the div wider than 25% */
+        min-width: 0;
+      }
+    }
+
+    div.barTrack {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      flex: 1;
+      position: relative;
+      height: 100%;
+
+      p {
+        font-size: 1rem;
+        font-weight: 500;
+      }
+
+      div.barFill {
+        border-radius: 8px;
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 100%;
+        transition: width 1s ease-out;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-evenly;
+        align-items: center;
+      }
+    }
+  }
+}
+
+div.hostShowAnswerRanking {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  padding: 0 0.5rem;
+  gap: 1rem;
+  box-sizing: border-box;
+  overflow: hidden;
+
+  div.scaleWrapper {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    margin-left: 120px;
+
+    div.labelContainer {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      margin-bottom: 0.5rem;
+      padding: 0 0.25rem;
+
+      span {
+        font-weight: 700;
+        color: var(--secondary-color);
+        font-size: 1rem;
+      }
+    }
+
+    div.numberLine {
+      height: 0.25rem;
+      background: var(--light-text);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: relative;
+      width: 100%;
+    }
+
+    div.correctRow {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 1rem;
+      width: 100%;
+    }
+
+    /* Add this class to your CSS */
+
+    div.dotContainer {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 0;
+      flex: 1;
+    }
+
+    div.dot {
+      width: 12px;
+      height: 12px;
+      z-index: 2;
+      border-radius: 50%;
+      flex-shrink: 0; /* Prevent dot from squishing */
+    }
+  }
+
+  div.slot {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 0;
+    flex: 1;
+    text-align: center;
+    white-space: nowrap;
+  }
+
+  div.playerGrid {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    overflow-y: auto;
+
+    div.playerInfo {
+      width: 120px;
+      flex-shrink: 0;
+
+      p {
+        font-weight: 500;
+        color: var(--light-text);
+        font-size: 1rem;
+      }
+    }
+
+    div.playerRow {
+      display: flex;
+      align-items: center;
+
+      div.playerChoices {
+        display: flex;
+        justify-content: flex-start;
+        background-color: var(--secondary-color);
+        align-items: center;
+        flex-grow: 1;
+        width: 100%;
+        border-radius: 8px;
+        padding: 0.5rem;
+      }
+    }
+  }
+
+  .pill {
+    padding: 4px 12px;
+    border-radius: 8px;
+    font-size: 0.85rem;
+  }
+}
+
+div.hostShowAnswerMatching {
+  width: 100%;
+  height: 100%;
+  padding: 0 0.5rem;
+  gap: 1rem;
+  box-sizing: border-box;
+  overflow-y: auto;
+
+  div.labelContainer {
+    border-radius: 4px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    align-items: center;
+    justify-content: center;
+    display: flex;
+    p {
+      font-weight: 600;
+      font-size: 1rem;
+      text-align: center;
+    }
+  }
+
+  div.playerCell {
+    border-radius: 4px;
+    display: flex;
+    flex-direction: row; /* Change to row */
+    flex-wrap: wrap; /* Allow wrapping */
+    align-items: center;
+    justify-content: center;
+    gap: 4px; /* Spacing between avatars */
+    padding: 8px;
+    overflow-y: auto;
+    min-height: 60px; /* Ensure cell has some height */
+  }
+}
+
+div.hostShowAnswerDrawing {
+  width: 100%;
+  height: 100%;
+  justify-content: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+
+  div.correctAnswerContainer {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+
+    button.zoomInButton {
+      svg {
+        color: var(--secondary-color);
+      }
+    }
+
+    img {
+      max-height: 100px;
+      aspect-ratio: 16/9;
+      object-fit: contain;
+    }
+
+    p.correctAnswerText {
+      font-size: 1rem;
+      color: var(--secondary-color);
+      font-weight: 400;
+      white-space: pre-line;
+    }
+  }
+
+  img.correctAnswerImage {
+    max-height: 400px;
+    aspect-ratio: 16/9;
+    object-fit: contain;
+  }
+
+  div.playerGrid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    width: 100%;
+    height: 100%;
+    column-gap: 1rem;
+    row-gap: 1rem;
+    overflow-y: auto;
+
+    button.playerItem:global(.MuiButton-root) {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      align-items: center;
+      justify-content: center;
+      border: 2px solid var(--primary-color);
+      border-radius: 8px;
+    }
+
+    p {
+      font-weight: 500;
+      font-size: 2rem;
+    }
+
+    p.nickname {
+      color: var(--light-text);
+      font-weight: 400;
+      font-size: 1.25rem;
+    }
+  }
+}
+
+img.correctAnswerPlayer {
+  width: 400px;
+  aspect-ratio: 16/9;
+  object-fit: contain;
+}
+
+p.correctAnswerDialogText {
+  font-weight: 500;
+  color: var(--secondary-color);
+  font-size: 1rem;
+  text-align: center;
+  padding: 0.5rem;
+  white-space: pre-line;
+}
+
+.playerAnswerText {
+  font-weight: 500;
+  color: var(--primary-color);
+  font-size: 1rem;
+  text-align: center;
+  padding: 0.5rem;
+  white-space: pre-line;
+}
+
+div.playerAnswerDialog {
+  div.dialogContent {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    justify-content: center;
+    padding: 0.5rem;
+    width: 100%;
+    overflow-x: hidden;
+    margin-top: 0.75rem;
+
+    div.answerCol {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      align-items: center;
+      justify-content: center;
+      width: 48%;
+
+      p.playerLabel {
+        font-weight: 500;
+        font-size: 1.25rem;
+      }
+    }
+  }
+
+  div.dialogFooter {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    overflow: hidden;
+    padding: 0.5rem;
+    margin-top: 0.75rem;
+
+    div.buttonContainer {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+  }
+}
+
+div.playerShowAnswer {
+  display: flex;
+  flex-direction: column;
+  background-color: var(--background);
+  width: 100vw;
+  height: 100vh;
+  padding: 1.25rem;
+  box-sizing: border-box;
+  gap: 1em;
+
+  div.playerShowAnswerHeader {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.5rem;
+    width: 100%;
+    border-bottom: 1px solid var(--secondary-color);
+    padding: 0.5rem 1rem;
+    box-sizing: border-box;
+
+    p {
+      font-weight: 500;
+      color: var(--secondary-color);
+      font-size: 1rem;
+    }
+  }
+
+  div.playerShowAnswerFooter {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.5rem;
+    width: 100%;
+    border-top: 1px solid var(--secondary-color);
+    padding: 0.5rem 1rem;
+    box-sizing: border-box;
+
+    p {
+      font-weight: 500;
+      color: var(--light-text);
+      font-size: 1rem;
+    }
+  }
+
+  div.mainContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 3rem;
+    width: 100%;
+    height: 100%;
+    overflow-y: auto;
+    padding: 0.5rem 1rem;
+    box-sizing: border-box;
+
+    p.noAnswerText {
+      font-weight: 500;
+      color: var(--error);
+      font-size: 1.5rem;
+      text-align: center;
+    }
+
+    p.title {
+      font-weight: 700;
+      font-size: 3rem;
+    }
+
+    p.score {
+      font-weight: 500;
+      font-size: 2rem;
+      color: var(--secondary-color);
+    }
+
+    svg {
+      height: 72px;
+      width: 72px;
+    }
+  }
+}

@@ -85,8 +85,8 @@ export function createRuntimeGame(authorGame: GameAuthor): GameRuntime {
       const id = uuidv4();
 
       // effective timeLimit: per-question override else game default else undefined
-      const timeLimit =
-        qAuthor.timeLimit ?? authorGame.defaultTimeLimit ?? undefined;
+      const timeLimit = qAuthor.timeLimit ?? authorGame.defaultTimeLimit ?? 30;
+      const doublePoints = qAuthor.doublePoints ?? false;
 
       // Build runtime question (preserve display fields)
       const runtimeQ = {
@@ -94,6 +94,7 @@ export function createRuntimeGame(authorGame: GameAuthor): GameRuntime {
         id,
         timeLimit,
         playerAnswers: {},
+        doublePoints: doublePoints,
       } as QuestionRuntime;
 
       return runtimeQ;
@@ -154,18 +155,21 @@ export async function cleanStaleLobbies() {
   if (!snapshot.exists()) return;
 
   const now = Date.now();
-  const stale: string[] = [];
+  const updates: Record<string, null> = {};
+  let count = 0;
 
   snapshot.forEach((child) => {
     const lobby = child.val();
-
     const last = new Date(lobby.lastActivityTime ?? lobby.startTime).getTime();
 
     if (now - last > 24 * 60 * 60 * 1000) {
-      stale.push(child.key!);
+      updates[`${DATABASE.LOBBY}/${child.key}`] = null; // Setting to null deletes it
+      count++;
     }
   });
 
-  // delete all stale lobbies
-  await Promise.all(stale.map((code) => removeLobby(code)));
+  if (count > 0) {
+    await update(ref(db), updates);
+    console.log(`Cleaned up ${count} stale lobbies.`);
+  }
 }

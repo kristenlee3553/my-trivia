@@ -54,7 +54,7 @@ export default function HostLobbyPage() {
             Back
           </Button>
           <Typography variant="h1" className={styles.gameName}>
-            {lobby?.gameInfo.name}
+            {lobby?.gameData.name}
           </Typography>
           <Button variant="secondary">Start</Button>
         </Box>

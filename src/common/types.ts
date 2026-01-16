@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { AVATAR_KEYS } from "./components/icons";
 export type LobbyStatus =
   | "notStarted"
   | "question"
@@ -16,6 +17,7 @@ export const PlayerSchema = z.object({
   streak: z.number(),
   numCorrect: z.number(),
   numAnswered: z.number(),
+  avatarKey: z.enum(AVATAR_KEYS),
 });
 
 export type DisplayType = "video" | "text" | "image";
@@ -54,18 +56,26 @@ export type QuestionType =
 
 type EnsureValidQuestionType<T extends QuestionType> = T;
 
+export type PlayerAnswer<T> = {
+  answer: T;
+  timeTaken: number; // in ms;
+  scoreEarned: number;
+  accuracy: number; // Keep streak if accuracy is > 0.5
+  streakAtStart: number; // streak at the start of the question. Need it if host overrides their answer
+};
+
 export type SingleSelect = {
   answerType: EnsureValidQuestionType<"single">;
   options: string[];
   correctAnswer: string;
-  playerAnswers: Record<string, string>;
+  playerAnswers: Record<string, PlayerAnswer<string>>;
 };
 
 export type MultiSelect = {
   answerType: EnsureValidQuestionType<"multi">;
   options: string[];
   correctAnswer: string[];
-  playerAnswers: Record<string, string[]>;
+  playerAnswers: Record<string, PlayerAnswer<string[]>>;
 };
 
 export type Matching = {
@@ -75,7 +85,7 @@ export type Matching = {
     right: Set<string>;
   };
   correctAnswer: Record<string, string>;
-  playerAnswers: Record<string, Record<string, string>>;
+  playerAnswers: Record<string, PlayerAnswer<Record<string, string>>>;
 };
 
 export type Ranking = {
@@ -84,21 +94,21 @@ export type Ranking = {
   leftLabel: string;
   rightLabel: string;
   correctAnswer: string[];
-  playerAnswers: Record<string, string[]>;
+  playerAnswers: Record<string, PlayerAnswer<string[]>>;
 };
 
 export type Drawing = {
   answerType: EnsureValidQuestionType<"draw">;
   options: never;
   correctAnswer: string;
-  playerAnswers: Record<string, string>; // dataurl
+  playerAnswers: Record<string, PlayerAnswer<string>>; // dataurl
 };
 
 export type ShortAnswer = {
   answerType: EnsureValidQuestionType<"shortAnswer">;
   options: never;
   correctAnswer: string;
-  playerAnswers: Record<string, string>;
+  playerAnswers: Record<string, PlayerAnswer<string>>;
 };
 
 type QuestionTypeData =
@@ -123,7 +133,12 @@ type MergeAuthor<T> = T extends any
 export type QuestionAuthor = MergeAuthor<QuestionTypeData>;
 
 type DistributeRuntime<T> = T extends any
-  ? T & BaseQuestion & Display & { id: string }
+  ? T &
+      Display & { id: string } &
+      // This makes 'timeLimit' mandatory for the Runtime version
+      Required<Pick<BaseQuestion, "timeLimit" | "doublePoints">> &
+      // Keeps other BaseQuestion fields optional
+      Omit<BaseQuestion, "timeLimit" | "doublePoints">
   : never;
 
 export type QuestionRuntime = DistributeRuntime<QuestionTypeData>;
@@ -149,7 +164,7 @@ export type Lobby = {
   startTime: string;
   lastUpdated: string;
   gameData: GameRuntime;
-  currentQuestion: string;
+  currentQuestionId: string;
   questionOrder: string[];
   currentIndex: number;
   gameOptions: {

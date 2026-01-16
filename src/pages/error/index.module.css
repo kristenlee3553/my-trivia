@@ -13,12 +13,12 @@
 
 h1.title {
   font-size: 40px;
-  color: var(--primary-color);
+  color: var(--accent-color);
   font-weight: bold;
 }
 
 p.description {
   font-size: 20px;
-  color: var(--accent-color);
+  color: var(--light-text);
   font-weight: 500;
 }

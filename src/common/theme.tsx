@@ -235,6 +235,31 @@ const themeOptions: ThemeOptions = {
         }),
       },
     },
+    MuiDialogTitle: {
+      styleOverrides: {
+        root: ({ theme }) => ({
+          borderBottom: `3px solid ${theme.palette.secondary.main}`,
+          color: theme.palette.secondary.main,
+          fontWeight: 600,
+          fontSize: "1.25rem",
+        }),
+      },
+    },
+    MuiDialog: {
+      styleOverrides: {
+        paper: {
+          padding: "0.5rem",
+          borderRadius: "12px",
+        },
+      },
+    },
+    MuiDialogActions: {
+      styleOverrides: {
+        root: ({ theme }) => ({
+          borderTop: `3px solid ${theme.palette.secondary.main}`,
+        }),
+      },
+    },
   },
 };
 

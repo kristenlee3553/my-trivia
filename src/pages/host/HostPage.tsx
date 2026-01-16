@@ -20,6 +20,7 @@ import {
 } from "../../common/types";
 import { useUser } from "../../context/UserContext.tsx";
 import {
+  cleanStaleLobbies,
   createLobby,
   createRuntimeGame,
   generateUniqueLobbyCode,
@@ -39,18 +40,19 @@ export const gameFiles: Record<GameType, GameAuthor> = {
 
 export default function HostPage() {
   const navigate = useNavigate();
-  const userContext = useUser();
+  const { firebaseUser, appUser, setAppUser } = useUser();
   const { setLobby } = useLobby();
 
   const [shuffleQuestions, setShuffleQuestions] = useState<boolean>(false);
   const [shuffleAnswers, setShuffleAnswers] = useState<boolean>(false);
   const [selectedGame, setSelectedGame] = useState<GameType | null>("intro");
   const [creating, setCreating] = useState<boolean>(false);
+  const [deleting, setDeleting] = useState<boolean>(false);
 
   const toggleContainerId = useId();
 
   async function createLobbyHandler() {
-    if (!userContext?.appUser?.uid) {
+    if (!appUser || appUser?.uid) {
       console.error("No authenticated user found — sign in first");
       return;
     }
@@ -73,7 +75,7 @@ export default function HostPage() {
         shuffleQuestions,
       });
 
-      const hostId = userContext.appUser.uid;
+      const hostId = appUser.uid;
 
       // Create Lobby Object
       const lobbyObj: Lobby = {
@@ -84,7 +86,7 @@ export default function HostPage() {
         lastUpdated: new Date().toISOString(),
         lobbyStatus: "notStarted",
         gameData: preparedGame,
-        currentQuestion: "",
+        currentQuestionId: "",
         questionOrder: preparedGame.questions.map((q) => q.id),
         currentIndex: 0,
         gameOptions: {
@@ -101,8 +103,8 @@ export default function HostPage() {
         setLobby(lobbyObj);
 
         // Update User Context
-        userContext.setAppUser({
-          ...userContext.appUser,
+        setAppUser({
+          ...appUser,
           isHost: true,
           lobbyCode: lobbyCode,
         });
@@ -121,6 +123,19 @@ export default function HostPage() {
     }
   }
 
+  async function cleanStaleLobbiesHandler() {
+    try {
+      if (!firebaseUser) return;
+
+      setDeleting(true);
+      await cleanStaleLobbies();
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setDeleting(false);
+    }
+  }
+
   return (
     <ThemeWrapper>
       <Box className={styles.hostPageContainer}>
@@ -136,12 +151,11 @@ export default function HostPage() {
             Lobby Creation
           </Typography>
           <Button
-            variant="secondary"
-            className={styles.invisible}
-            tabIndex={-1}
-            aria-hidden="true"
+            variant="cancel"
+            onClick={cleanStaleLobbiesHandler}
+            disabled={creating || deleting}
           >
-            Help
+            Clean up
           </Button>
         </Box>
         <Divider />

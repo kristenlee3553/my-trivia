@@ -12,6 +12,8 @@ import {
 } from "firebase/auth";
 import { auth } from "../firebase/firebase";
 import type { Player } from "../common/types";
+import { getTestingHost } from "../testing/index";
+import { TESTING_LOBBY_CODE } from "../testing/constants";
 
 type AppUser = {
   uid: string;
@@ -32,6 +34,8 @@ const UserContext = createContext<UserContextType>({
   setAppUser: () => {},
 });
 
+const useTestingData = true;
+
 export function UserProvider({ children }: { children: ReactNode }) {
   const [firebaseUser, setFirebaseUser] = useState<User | null>(null);
   const [appUser, setAppUser] = useState<AppUser | null>(null);
@@ -45,7 +49,16 @@ export function UserProvider({ children }: { children: ReactNode }) {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       setFirebaseUser(user);
       if (user) {
-        setAppUser((prev) => prev ?? { uid: user.uid });
+        if (useTestingData) {
+          setAppUser({
+            uid: user.uid,
+            isHost: true,
+            lobbyCode: TESTING_LOBBY_CODE,
+            playerData: getTestingHost(user.uid),
+          });
+        } else {
+          setAppUser((prev) => prev ?? { uid: user.uid });
+        }
       }
     });
 

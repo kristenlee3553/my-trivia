@@ -2,65 +2,51 @@ import { createContext, useContext, useState, type ReactNode } from "react";
 import type { DisplayType, Lobby, QuestionType } from "../common/types";
 import introGame from "../games/intro";
 import { createRuntimeGame } from "../firebase/lobby";
+import { getQuestionIndex, getTestPlayers, injectAnswers } from "../testing";
+import { TESTING_LOBBY_CODE } from "../testing/constants";
 
 type LobbyContextType = {
   lobby: Lobby | null;
   setLobby: React.Dispatch<React.SetStateAction<Lobby | null>>;
 };
 
-function getQuestionIndex(
-  numOptions: number,
-  answerType: QuestionType,
-  displayType: DisplayType
-): number {
-  if (numOptions === 2 && answerType === "single" && displayType === "text")
-    return 0;
-  if (numOptions === 3 && answerType === "single" && displayType === "image")
-    return 1;
-  if (numOptions === 4 && answerType === "multi" && displayType === "text")
-    return 2;
-  if (numOptions === 5 && answerType === "multi" && displayType === "text")
-    return 3;
-  if (numOptions === 4 && answerType === "single" && displayType === "video")
-    return 4;
-  if (numOptions === 6 && answerType === "single" && displayType === "video")
-    return 5;
-  if (answerType === "single") return 5;
-  if (answerType === "multi") return 2;
-  if (answerType === "matching") return 6;
-  if (answerType === "ranking") return 7;
-  if (answerType === "draw") return 8;
-  if (answerType === "shortAnswer") return 9;
-
-  if (numOptions === 2) return 0;
-  if (numOptions === 3) return 1;
-  if (numOptions === 4) return 2;
-  if (numOptions === 5) return 3;
-  if (numOptions === 6) return 5;
-
-  return 0;
-}
+const numOptions: number | undefined = undefined;
+const displayType: DisplayType | undefined = undefined;
+const answerType: QuestionType | undefined = "single";
 
 function getTestingLobby() {
-  const game = createRuntimeGame(introGame);
-  //const questionIndex = 20;
-  const questionIndex = getQuestionIndex(4, "draw", "image");
+  let game = createRuntimeGame(introGame);
+  //const questionIndex = 0;
+  const questionIndex = getQuestionIndex({
+    answerType,
+    displayType,
+    numOptions,
+  });
+
+  const players = getTestPlayers(5);
+
+  const currentQuestion = game.questions[questionIndex];
+  game.questions[questionIndex] = injectAnswers(currentQuestion, players);
+
   const testingLobby: Lobby = {
     currentIndex: questionIndex,
-    lobbyCode: "1234",
+    lobbyCode: TESTING_LOBBY_CODE,
     hostId: "1",
-    players: {},
-    lobbyStatus: "answering",
+    players: players,
+    lobbyStatus: "showAnswer",
     startTime: "",
     lastUpdated: "",
     gameData: game,
-    currentQuestion: game.questions[questionIndex].id,
-    questionOrder: [],
+    currentQuestionId: game.questions[questionIndex].id,
+    questionOrder: game.questions.map((q) => q.id),
     gameOptions: {
       shuffleQuestions: false,
       shuffleAnswers: false,
     },
   };
+
+  const now = new Date();
+  console.log(`Testing Lobby: ${now.toLocaleTimeString()}: `, testingLobby);
   return testingLobby;
 }
 

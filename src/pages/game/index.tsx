@@ -3,6 +3,7 @@ import { useLobby } from "../../context/LobbyContext";
 import { useUser } from "../../context/UserContext";
 import SomethingWentWrong from "../error/SomethingWentWrong";
 import { HostAnswerPage, PlayerAnswerPage } from "./answering";
+import { ShowAnswerHostPage, ShowAnswerPlayerPage } from "./showAnswer";
 import QuestionPage from "./question";
 
 export default function GameManager() {
@@ -14,13 +15,17 @@ export default function GameManager() {
   }
   const { lobbyStatus, currentIndex, gameData, lobbyCode } = lobby;
   const { playerData } = user.appUser;
+
+  if (!playerData) {
+    return <SomethingWentWrong optionalText="No Player Data" />;
+  }
+
   const isHost = true;
   const currentQuestion = lobby?.gameData.questions.find(
-    (question) => question.id === lobby.currentQuestion
+    (question) => question.id === lobby.currentQuestionId
   );
 
   if (!currentQuestion) {
-    console.error("Current Question cannot be found");
     return (
       <SomethingWentWrong optionalText="Current Question cannot be found" />
     );
@@ -28,7 +33,11 @@ export default function GameManager() {
 
   function onQuestionPreviewFinish() {}
 
+  // Only update the playerAnswerData in the question. Player remains the same. PlayerAnswerData = snapshot of the points for this question.
   function onAnsweringFinish() {}
+
+  // Update Player object and PlayerAnswerData. This is final.
+  function onShowAnswerFinish() {}
 
   let content;
 
@@ -53,10 +62,17 @@ export default function GameManager() {
           questionNumber={currentIndex}
         />
       ) : (
-        <PlayerAnswerPage
+        <PlayerAnswerPage question={currentQuestion} player={playerData} />
+      );
+      break;
+    case "showAnswer":
+      content = isHost ? (
+        <ShowAnswerHostPage
           question={currentQuestion}
-          playerId={playerData?.uid ?? "1111111"}
+          onNextPhase={onShowAnswerFinish}
         />
+      ) : (
+        <ShowAnswerPlayerPage question={currentQuestion} player={playerData} />
       );
       break;
     default:

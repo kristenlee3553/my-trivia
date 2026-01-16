@@ -2,12 +2,13 @@ import { Button, Stack, Typography } from "@mui/material";
 import type {
   DisplayImage,
   DisplayVideo,
-  Matching,
+  Player,
+  PlayerAnswer,
   QuestionRuntime,
 } from "../../../common/types";
 import BaseOptionGrid from "../options/BaseOption";
 import styles from "./index.module.css";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import VideoDisplay from "../VideoDisplay";
 import MatchingOption from "../options/MatchingOption";
 import RankingOptionPlayer, {
@@ -15,6 +16,11 @@ import RankingOptionPlayer, {
 } from "../options/RankingOption";
 import ShortAnswer from "../options/ShortAnswer";
 import DrawOptionPlayer, { DrawOptionHost } from "../options/DrawOption";
+import {
+  calculatePoints,
+  getAnswerAccuracy,
+  isSubjectiveQuestionType,
+} from "../../logic";
 
 type AnsweringPageTopProps = {
   question: QuestionRuntime;
@@ -97,7 +103,7 @@ type MediaDisplayContainerProps = {
   imageProps?: Pick<DisplayImage, "imageUrl">;
 };
 
-function MediaDisplayContainer({
+export function MediaDisplayContainer({
   videoProps,
   imageProps,
 }: MediaDisplayContainerProps) {
@@ -119,46 +125,38 @@ function MediaDisplayContainer({
 
 type PlayerAnswerPageProps<T extends QuestionRuntime> = {
   question: T;
-  playerId: string;
+  player: Player;
 };
 
 export function PlayerAnswerPage<T extends QuestionRuntime>({
   question,
-  playerId,
+  player,
 }: PlayerAnswerPageProps<T>) {
-  const { answerType, options } = question;
+  const { answerType, options, doublePoints, timeLimit } = question;
+  const startTime = useRef(Date.now());
 
   const handlePlayerSubmit = (answer: T["correctAnswer"]) => {
-    console.log(`Submitting for ${playerId}:`, answer);
-    const { answerType, correctAnswer } = question;
-    let isCorrect = false;
+    const now = Date.now();
+    const timeTakenMs = now - startTime.current;
+    const isCorrect = getAnswerAccuracy({ player, question });
 
-    switch (answerType) {
-      case "single":
-        isCorrect = answer === correctAnswer;
-        break;
-      case "multi":
-        (answer as string[]).length === correctAnswer.length;
-        break;
-      case "ranking":
-        isCorrect =
-          (answer as string[]).length === correctAnswer.length &&
-          (answer as string[]).every(
-            (val, index) => val === correctAnswer[index]
-          );
-        break;
-      case "matching":
-        const playerAns = answer as Matching["correctAnswer"];
-        const keys = Object.keys(correctAnswer);
+    const playerAnswerData: PlayerAnswer<T["correctAnswer"]> = {
+      answer: answer,
+      accuracy: isCorrect,
+      scoreEarned: calculatePoints({
+        accuracy: isCorrect,
+        isDoublePoints: doublePoints ?? false,
+        questionTimeLimit: timeLimit,
+        timeTakenMs,
+        streak: player.streak,
+        ignoreTimePoints: isSubjectiveQuestionType(answerType),
+      }),
+      timeTaken: timeTakenMs,
+      streakAtStart: player.streak,
+    };
 
-        isCorrect = keys.every((key) => playerAns[key] === correctAnswer[key]);
-        break;
-      case "draw":
-      case "shortAnswer":
-        break;
-    }
-
-    console.log(isCorrect ? "✨ Correct!" : "❌ Try again!");
+    // TO DO UPDATE DB PlayerAnswer record
+    console.log("Player answer: ", playerAnswerData);
   };
 
   let content = null;
